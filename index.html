@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>由小柳主宰的世界</title>
+    <style>
+      :root {
+        --text: #4b4454;
+        --muted: #7e7688;
+        --line: #ece2f0;
+        --panel: #fffdfbcc;
+        --pink: #e6c3cf;
+        --taro: #cec2e8;
+        --apricot: #efdcc7;
+      }
+
+      * { box-sizing: border-box; }
+      html, body { margin: 0; min-height: 100%; }
+      body {
+        color: var(--text);
+        font-family: "Noto Serif SC", "PingFang SC", "Microsoft YaHei", serif;
+        overflow-x: hidden;
+        background:
+          radial-gradient(circle at 15% 15%, #f3dce5 0%, transparent 36%),
+          radial-gradient(circle at 86% 10%, #ddd5ef 0%, transparent 32%),
+          linear-gradient(180deg, #fdfbf8, #faf3f7 56%, #f9f6ef);
+      }
+
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      body::before {
+        background:
+          repeating-linear-gradient(
+            104deg,
+            rgba(255, 255, 255, 0) 0,
+            rgba(255, 255, 255, 0) 7px,
+            rgba(255, 255, 255, 0.24) 8px,
+            rgba(255, 255, 255, 0.24) 9px
+          ),
+          radial-gradient(circle at 75% 20%, rgba(255, 248, 210, 0.25) 0, rgba(255, 248, 210, 0) 18%),
+          radial-gradient(circle at 22% 72%, rgba(255, 230, 238, 0.2) 0, rgba(255, 230, 238, 0) 20%);
+        animation: rainShift 14s linear infinite;
+      }
+
+      body::after {
+        background:
+          radial-gradient(circle at 40% 120%, rgba(124, 107, 123, 0.13) 0, rgba(124, 107, 123, 0) 45%),
+          linear-gradient(180deg, rgba(80, 67, 84, 0) 72%, rgba(80, 67, 84, 0.08) 100%);
+      }
+
+      .screen {
+        min-height: 100vh;
+        width: 100%;
+      }
+
+      .welcome {
+        display: grid;
+        place-items: center;
+        padding: 20px;
+      }
+
+      .welcome-inner {
+        text-align: center;
+        max-width: 900px;
+        animation: fadeRise 0.9s ease both;
+      }
+
+      .welcome-title {
+        margin: 0;
+        font-size: clamp(38px, 6vw, 62px);
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
+
+      .title-glow {
+        background: linear-gradient(90deg, #cf9fac, #b9acdf 58%, #e1bda7);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 0 26px rgba(208, 177, 194, 0.34);
+      }
+
+      .welcome-sub {
+        margin: 16px auto 0;
+        font-size: clamp(15px, 2vw, 18px);
+        color: var(--muted);
+        letter-spacing: 0.08em;
+        max-width: 700px;
+        animation: fadeRise 1.2s ease both;
+      }
+
+      .enter-btn {
+        margin-top: 28px;
+        border: none;
+        border-radius: 14px;
+        padding: 12px 26px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #4f4759;
+        background: linear-gradient(90deg, #e3bfcc, #cdc1e7);
+        box-shadow: 0 12px 24px rgba(174, 150, 168, 0.24);
+        cursor: pointer;
+        transition: transform 0.24s ease, filter 0.24s ease, box-shadow 0.24s ease;
+        animation: fadeRise 1.5s ease both;
+      }
+
+      .enter-btn:hover {
+        transform: translateY(-2px) scale(1.02);
+        filter: brightness(0.96);
+        box-shadow: 0 16px 30px rgba(174, 150, 168, 0.32);
+      }
+
+      @keyframes rainShift {
+        0% { transform: translateY(0); opacity: 0.45; }
+        50% { transform: translateY(8px); opacity: 0.62; }
+        100% { transform: translateY(0); opacity: 0.45; }
+      }
+
+      @keyframes fadeRise {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="screen welcome" id="welcomeScreen">
+      <div class="welcome-inner">
+        <h1 class="welcome-title">欢迎进入<span class="title-glow">小柳</span>的剧情世界</h1>
+        <p class="welcome-sub">你的每一步，都在改写世界的记忆</p>
+        <button class="enter-btn" id="enterBtn">点击进入</button>
+      </div>
+    </section>
+
+    <script>
+      document.getElementById('enterBtn').addEventListener('click', () => {
+        window.location.href = 'game.html';
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>结局总鉴</title>
+    <style>
+      :root {
+        --text: #4b4454;
+        --muted: #7e7688;
+        --line: #ece2f0;
+        --panel: #fffdfbcc;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        color: var(--text);
+        font-family: "Noto Serif SC", "PingFang SC", "Microsoft YaHei", serif;
+        background:
+          radial-gradient(circle at 15% 15%, #f3dce5 0%, transparent 36%),
+          radial-gradient(circle at 86% 10%, #ddd5ef 0%, transparent 32%),
+          linear-gradient(180deg, #fdfbf8, #faf3f7 56%, #f9f6ef);
+        min-height: 100vh;
+        padding: 16px;
+      }
+      .page {
+        width: min(1080px, 100%);
+        margin: 0 auto;
+        border: 1px solid rgba(236, 226, 240, 0.82);
+        border-radius: 24px;
+        background: var(--panel);
+        box-shadow: 0 24px 50px rgba(144, 122, 137, 0.2);
+        padding: 18px;
+      }
+      .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+      h1 { margin: 0; font-size: clamp(24px, 4vw, 38px); }
+      .btn {
+        border: 1px solid #e9deee;
+        background: #fff;
+        color: #625a6f;
+        border-radius: 10px;
+        padding: 8px 12px;
+        cursor: pointer;
+      }
+      .stats { display: flex; gap: 8px; flex-wrap: wrap; color: #6f697b; font-size: 13px; margin-bottom: 10px; }
+      .tools { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+      .tools select,
+      .tools button {
+        border: 1px solid #e9deee;
+        background: #fff;
+        color: #625a6f;
+        border-radius: 10px;
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+      .tools button.active { background: linear-gradient(90deg, #e4c1ce, #cdc1e7); color: #4a4353; font-weight: 700; }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+      }
+      .card {
+        border: 1px solid var(--line);
+        background: #fff;
+        border-radius: 14px;
+        padding: 12px;
+      }
+      .card.locked { opacity: 0.68; background: #faf7fb; }
+      .card h3 { margin: 0 0 8px; font-size: 15px; }
+      .card p { margin: 0; font-size: 13px; line-height: 1.65; color: #696474; }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <div class="top">
+        <h1>结局总鉴</h1>
+        <button class="btn" id="backBtn">返回主页面</button>
+      </div>
+      <div class="stats" id="stats"></div>
+      <div class="tools">
+        <select id="sceneFilter"></select>
+        <button id="filterAll" class="active">全部</button>
+        <button id="filterUnlocked">仅已解锁</button>
+        <button id="filterLocked">仅未解锁</button>
+        <button id="filterTrue">仅真结局</button>
+      </div>
+      <section class="grid" id="grid"></section>
+    </main>
+
+    <script>
+      const STORE_KEY = "xiaoliu-world-save-v1";
+      const SCENE_META = [
+        { id: "crossroad", name: "十字路口·撑白伞的女人" },
+        { id: "riverside", name: "滨江步道·等待回信的女孩" },
+        { id: "station", name: "旧站台·抱花束的少年" },
+        { id: "bookstore", name: "巷口书店·失眠的店主" },
+        { id: "memory_hub", name: "记忆中枢·回声天台" }
+      ];
+
+      const ENDINGS = [
+        { id: "crossroad:rain_heal", sceneId: "crossroad", title: "雨夜释怀", text: "陪她在门前停了很久后，执念终于融化。" },
+        { id: "crossroad:paper_farewell", sceneId: "crossroad", title: "纸页告别", text: "那封信像眼泪一样，替她说完来不及的话。" },
+        { id: "crossroad:clear_end", sceneId: "crossroad", title: "清醒落幕", text: "她坦然接受终点，走入雨幕。" },
+        { id: "crossroad:guardian_ghost", sceneId: "crossroad", title: "路口守望者", text: "她留在路口，只为迷路者亮伞。" },
+        { id: "crossroad:easter_wander", sceneId: "crossroad", title: "偏航乘客", text: "她成了夜行彩蛋，在城市里偶尔出现。" },
+        { id: "crossroad:dawn_release", sceneId: "crossroad", title: "黎明落伞", text: "她把白伞留给你，走向晨雾。" },
+        { id: "crossroad:door_umbrella", sceneId: "crossroad", title: "门前白伞", text: "她把白伞留在家门口，轻轻回家。" },
+        { id: "crossroad:nameless_warmth", sceneId: "crossroad", title: "无名暖信", text: "没有署名的爱，仍准确抵达。" },
+        { id: "crossroad:final_message", sceneId: "crossroad", title: "最后一句", text: "她托你转达最后一句迟到的真心。" },
+        { id: "crossroad:dawn_guard", sceneId: "crossroad", title: "天亮守则", text: "她只在最黑时刻出现，天亮前离开。" },
+        { id: "crossroad:night_helper", sceneId: "crossroad", title: "夜行引路人", text: "雨夜里，她替迷途者照亮归路。" },
+        { id: "crossroad:umbrella_legacy", sceneId: "crossroad", title: "伞下余温", text: "白伞被继承，善意被延续。" },
+
+        { id: "riverside:letter_to_self", sceneId: "riverside", title: "晚风寄信", text: "她把信寄给十七岁的自己。" },
+        { id: "riverside:late_confession", sceneId: "riverside", title: "迟到告白", text: "晚来的信，也能赶上春天。" },
+        { id: "riverside:blank_heartbeat", sceneId: "riverside", title: "留白心动", text: "不相见，也能把喜欢保存完整。" },
+        { id: "riverside:bridge_goodbye", sceneId: "riverside", title: "桥边再见", text: "他们把谢谢与抱歉说出口。" },
+        { id: "riverside:mutual_love", sceneId: "riverside", title: "雨夜相认", text: "原来你也在等。" },
+        { id: "riverside:mailbox_miracle", sceneId: "riverside", title: "信箱奇迹", text: "转身时，奇迹刚好发生。" },
+        { id: "riverside:youth_archive", sceneId: "riverside", title: "青春存档", text: "把勇敢喜欢过的自己好好收藏。" },
+        { id: "riverside:delayed_letter", sceneId: "riverside", title: "延迟寄达", text: "给时间一段缓冲，也给自己。" },
+        { id: "riverside:drawer_moonlight", sceneId: "riverside", title: "抽屉月光", text: "青春像月光，安静地留着。" },
+        { id: "riverside:rain_restart", sceneId: "riverside", title: "雨中重启", text: "从一句好久不见重新开始。" },
+        { id: "riverside:door_crack_letter", sceneId: "riverside", title: "门缝回音", text: "不回头，也知道对方收到了。" },
+        { id: "riverside:ten_minutes", sceneId: "riverside", title: "十分钟奇遇", text: "刚刚好的等待，刚刚好的勇敢。" },
+
+        { id: "station:flower_wind", sceneId: "station", title: "风中花束", text: "想念从疼痛变成祝福。" },
+        { id: "station:flower_desk", sceneId: "station", title: "桌边晨光", text: "花在桌边，提醒他继续向前。" },
+        { id: "station:morning_train", sceneId: "station", title: "下一站晨光", text: "旧站停表重启，明天抵达。" },
+        { id: "station:sealed_letter", sceneId: "station", title: "封存回声", text: "眼泪落下，枷锁松开。" },
+        { id: "station:night_announcement", sceneId: "station", title: "夜班广播", text: "名字被念出，再见也终于平稳。" },
+        { id: "station:new_terminal", sceneId: "station", title: "新终点站", text: "他把新站名读作明天。" },
+        { id: "station:wind_without_turn", sceneId: "station", title: "不回头的风", text: "放下不是忘记，而是让记忆继续向前。" },
+        { id: "station:shared_blossom", sceneId: "station", title: "共分花期", text: "想念不再孤单，而是变成彼此照看。" },
+        { id: "station:midnight_envelope", sceneId: "station", title: "午夜信封", text: "最难熬的夜里，过去的自己会轻轻扶住他。" },
+        { id: "station:wardrobe_echo", sceneId: "station", title: "衣柜回响", text: "每次重读都痛，但一次比一次更平静。" },
+        { id: "station:name_in_wind", sceneId: "station", title: "风里名字", text: "没有解释的名字，也能被风温柔保存。" },
+        { id: "station:old_signpost", sceneId: "station", title: "旧牌路标", text: "旧站牌留在原地，成为后来人的方向。" },
+
+        { id: "bookstore:night_reading", sceneId: "bookstore", title: "灯下新章", text: "书店成了城市最温柔的屋檐。" },
+        { id: "bookstore:steady_revival", sceneId: "bookstore", title: "慢火回温", text: "理想被稳稳托住。" },
+        { id: "bookstore:balanced_store", sceneId: "bookstore", title: "平衡之页", text: "现实与热爱之间有了呼吸。" },
+        { id: "bookstore:curated_bloom", sceneId: "bookstore", title: "策展花期", text: "她终于自己写目录。" },
+        { id: "bookstore:week_break", sceneId: "bookstore", title: "缺席营业日", text: "暂停，是为了更好地回来。" },
+        { id: "bookstore:one_hour_light", sceneId: "bookstore", title: "一小时灯光", text: "先照亮自己，再照亮整家店。" },
+        { id: "bookstore:quiet_revision", sceneId: "bookstore", title: "静夜修订", text: "温柔的规则，让表达更安全地发生。" },
+        { id: "bookstore:wild_reading", sceneId: "bookstore", title: "野生读会", text: "喧闹与秩序并存，书店找到新的节奏。" },
+        { id: "bookstore:tender_budget", sceneId: "bookstore", title: "温柔预算", text: "经营也可以是有温度的数学题。" },
+        { id: "bookstore:hybrid_shelf", sceneId: "bookstore", title: "混合书架", text: "妥协并不失真，复杂也是诚实。" },
+        { id: "bookstore:silent_return", sceneId: "bookstore", title: "沉默归来", text: "她用改变回答了所有疑问。" },
+        { id: "bookstore:morning_lamp", sceneId: "bookstore", title: "晨间台灯", text: "先照亮自己，才能照亮一整天。" },
+
+        { id: "memory_hub:true_resonance", sceneId: "memory_hub", title: "真结局·共鸣纪元", text: "世界被温柔地共同书写。" },
+        { id: "memory_hub:true_balance", sceneId: "memory_hub", title: "真结局·透明星图", text: "规则可被质疑，也可被修订。" },
+        { id: "memory_hub:true_rewrite", sceneId: "memory_hub", title: "真结局·破晓重写", text: "没有标准答案的新世界降临。" }
+      ];
+
+      const worldState = {
+        unlockedEndings: new Set(),
+        trueEndUnlocked: false
+      };
+
+      const filterState = { sceneId: "all", mode: "all" };
+
+      const statsEl = document.getElementById("stats");
+      const gridEl = document.getElementById("grid");
+      const sceneFilter = document.getElementById("sceneFilter");
+      const filterAll = document.getElementById("filterAll");
+      const filterUnlocked = document.getElementById("filterUnlocked");
+      const filterLocked = document.getElementById("filterLocked");
+      const filterTrue = document.getElementById("filterTrue");
+
+      function loadState() {
+        const raw = localStorage.getItem(STORE_KEY);
+        if (!raw) return;
+        try {
+          const data = JSON.parse(raw);
+          worldState.unlockedEndings = new Set(Array.isArray(data.unlockedEndings) ? data.unlockedEndings : []);
+          worldState.trueEndUnlocked = Boolean(data.trueEndUnlocked);
+        } catch (_e) {
+          localStorage.removeItem(STORE_KEY);
+        }
+      }
+
+      function renderFilterOptions() {
+        const list = worldState.trueEndUnlocked ? SCENE_META : SCENE_META.filter((s) => s.id !== "memory_hub");
+        sceneFilter.innerHTML = ['<option value="all">全部场景</option>']
+          .concat(list.map((s) => `<option value="${s.id}">${s.name}</option>`))
+          .join("");
+        sceneFilter.value = filterState.sceneId;
+      }
+
+      function setMode(mode) {
+        filterState.mode = mode;
+        [filterAll, filterUnlocked, filterLocked, filterTrue].forEach((btn) => btn.classList.remove("active"));
+        if (mode === "all") filterAll.classList.add("active");
+        if (mode === "unlocked") filterUnlocked.classList.add("active");
+        if (mode === "locked") filterLocked.classList.add("active");
+        if (mode === "true") filterTrue.classList.add("active");
+        render();
+      }
+
+      function renderStats(fullList) {
+        const total = fullList.length;
+        const unlocked = fullList.filter((e) => worldState.unlockedEndings.has(e.id)).length;
+        const trueList = fullList.filter((e) => e.sceneId === "memory_hub");
+        const trueUnlocked = trueList.filter((e) => worldState.unlockedEndings.has(e.id)).length;
+        statsEl.innerHTML = `
+          <span>总收集 ${unlocked}/${total}</span>
+          <span>真结局 ${trueUnlocked}/${trueList.length}</span>
+        `;
+      }
+
+      function render() {
+        const base = worldState.trueEndUnlocked ? ENDINGS : ENDINGS.filter((e) => e.sceneId !== "memory_hub");
+        renderStats(base);
+
+        let list = base;
+        if (filterState.sceneId !== "all") list = list.filter((e) => e.sceneId === filterState.sceneId);
+        if (filterState.mode === "unlocked") list = list.filter((e) => worldState.unlockedEndings.has(e.id));
+        if (filterState.mode === "locked") list = list.filter((e) => !worldState.unlockedEndings.has(e.id));
+        if (filterState.mode === "true") list = list.filter((e) => e.sceneId === "memory_hub");
+
+        gridEl.innerHTML = list
+          .map((e) => {
+            const unlocked = worldState.unlockedEndings.has(e.id);
+            return `
+              <article class="card ${unlocked ? "" : "locked"}">
+                <h3>${unlocked ? e.title : "未解锁结局"}</h3>
+                <p>${unlocked ? e.text : `来自：${SCENE_META.find((s) => s.id === e.sceneId)?.name || "未知场景"}`}</p>
+              </article>
+            `;
+          })
+          .join("");
+      }
+
+      document.getElementById("backBtn").addEventListener("click", () => {
+        window.location.href = "index.html";
+      });
+      sceneFilter.addEventListener("change", () => {
+        filterState.sceneId = sceneFilter.value;
+        render();
+      });
+      filterAll.addEventListener("click", () => setMode("all"));
+      filterUnlocked.addEventListener("click", () => setMode("unlocked"));
+      filterLocked.addEventListener("click", () => setMode("locked"));
+      filterTrue.addEventListener("click", () => setMode("true"));
+
+      loadState();
+      renderFilterOptions();
+      render();
+    </script>
+  </body>
+</html>
