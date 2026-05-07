@@ -1236,6 +1236,60 @@
           }
         },
         {
+          id: "control_room",
+          name: "监控室·盯着黑屏的夜班保安",
+          role: "我的角色：深夜巡检协助员",
+          npcName: "夜班保安",
+          short: "半数黑屏里疑似有人影在笑，他请求你陪他撑到天亮。",
+          icon: "⌁",
+          nodes: {
+            start: {
+              narrative: "凌晨三点，监控室只剩风扇噪音。十六块屏幕里有八块黑屏，保安把辞职信压在保温杯下，低声说：我怀疑黑屏里有人在看我。",
+              dialogs: [
+                { role: "npc", text: "也许是我太累了，但我真的不敢一个人熬到换班。" },
+                { role: "me", text: "今晚我陪你，把每一块黑屏都看清楚。" }
+              ],
+              choices: [
+                { type: "logic", text: "先做设备排查，确认是故障还是干扰", next: "inspect" },
+                { type: "empathy", text: "先稳住他的情绪，陪他值守到天亮", next: "stay" },
+                { type: "rebel", text: "调出昨晚录像，直接追查人影来源", next: "trace" }
+              ]
+            },
+            inspect: {
+              narrative: "你们逐路排查，发现黑屏集中在同一旧线路。保安松了一口气，却又迟疑：是立刻上报停机检修，还是先手动切备用源撑过今晚？",
+              dialogs: [{ role: "npc", text: "我不想再赌运气了。" }],
+              choices: [
+                { type: "logic", text: "上报停机检修，按流程处理", ending: "black_screen_shadow" },
+                { type: "rebel", text: "切备用源，先恢复关键画面", ending: "backup_watch" }
+              ]
+            },
+            stay: {
+              narrative: "你给他热了杯水，陪他逐台记录异常时间。窗外天色慢慢发灰。他问：天亮后我是离开，还是再给自己一个月？",
+              dialogs: [{ role: "me", text: "决定不必在恐惧里做，在清醒里做就好。" }],
+              choices: [
+                { type: "empathy", text: "建议先请调白班，恢复作息再决定", ending: "dawn_shift" },
+                { type: "logic", text: "建议按计划离职，保留体面交接", ending: "calm_resign" }
+              ]
+            },
+            trace: {
+              narrative: "你们调出前夜录像，发现所谓人影其实是玻璃反射叠上走廊灯。真相很普通，但他的手仍在抖：要把这晚当笑话，还是写进值班手册提醒后来人？",
+              dialogs: [{ role: "npc", text: "原来最可怕的，是没人教我怎么面对这种夜。" }],
+              choices: [
+                { type: "rebel", text: "当场撕掉辞职信，继续留岗", ending: "night_guard_return" },
+                { type: "logic", text: "整理案例，留给下一任夜班", ending: "manual_lamp" }
+              ]
+            }
+          },
+          endings: {
+            black_screen_shadow: { title: "黑屏值守", text: "半数黑屏里疑似有人影在笑，辞职前夜他请求你陪他撑到天亮。\n你们按流程停机检修，恐惧终于有了可解释的边界。" },
+            backup_watch: { title: "备用回路", text: "你们切到备用电源，关键画面恢复。\n他第一次在夜班日志里写下：问题不神秘，方法才是盔甲。" },
+            dawn_shift: { title: "换班晨光", text: "天亮时他提交了调班申请，没有再逞强。\n有时候坚持不是硬扛，而是允许自己先被好好保护。" },
+            calm_resign: { title: "平静离岗", text: "他按计划离职，把最后一晚交接得干干净净。\n离开不是失败，而是把自己从持续消耗里完整带走。" },
+            night_guard_return: { title: "夜岗回声", text: "他把辞职信折回口袋，笑说再试一次。\n同样的监控室，不同的心态，连黑屏都不再像深渊。" },
+            manual_lamp: { title: "手册留灯", text: "你们把这晚写进夜班手册，新增异常排查流程。\n后来每个接班的人，都因为这页记录少走很多弯路。" }
+          }
+        },
+        {
           id: "bookstore",
           name: "巷口书店·失眠的店主",
           role: "我的角色：深夜寻书人",
@@ -1354,7 +1408,7 @@
         icon: "✦",
         nodes: {
           start: {
-            narrative: "你来到城市最高处的回声天台。四个场景里被你治愈过的人影在薄雾中并肩站立，白伞女人也轻轻点头。小柳的声音从风里落下：你愿意让这个世界继续有分歧，还是替所有人给出一个标准答案？",
+            narrative: "你来到城市最高处的回声天台。五个场景里被你治愈过的人影在薄雾中并肩站立，白伞女人也轻轻点头。小柳的声音从风里落下：你愿意让这个世界继续有分歧，还是替所有人给出一个标准答案？",
             dialogs: [{ role: "npc", text: "你不是来选对错，而是来决定这座城如何继续呼吸。" }],
             choices: [
               { type: "empathy", text: "让每个人保留自己的记忆版本", ending: "true_resonance" },
@@ -1577,7 +1631,7 @@
           worldState.rebel >= 3 &&
           Math.abs(worldState.empathy - worldState.logic) <= 2 &&
           Math.abs(worldState.logic - worldState.rebel) <= 2;
-        const ready = worldState.unlockedScenes.size === 4 && balanced;
+          const ready = worldState.unlockedScenes.size === 5 && balanced;
         if (ready && !worldState.trueEndUnlocked) {
           worldState.trueEndUnlocked = true;
           scenes.push(hiddenScene);
@@ -1755,6 +1809,15 @@
             new_start: "dawn-gold",
             transition_plan: "archive"
           },
+          control_room: {
+            default: "night",
+            black_screen_shadow: "night",
+            backup_watch: "city-light",
+            dawn_shift: "dawn",
+            calm_resign: "archive",
+            night_guard_return: "city-glow",
+            manual_lamp: "dawn-gold"
+          },
           memory_hub: {
             default: "true",
             true_resonance: "true",
@@ -1771,6 +1834,7 @@
           riverside: "✉",
           station: "⏰",
           bookstore: "☷",
+          control_room: "⌁",
           memory_hub: "✦"
         };
         return icons[sceneId] || "✦";
