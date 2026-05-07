@@ -187,6 +187,34 @@
         padding: 6px 10px;
         font-size: 12px;
         cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .mini-btn:hover {
+        background: linear-gradient(90deg, #e4c1ce, #cdc1e7);
+        color: #4a4353;
+        font-weight: 600;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(175, 152, 165, 0.15);
+      }
+
+      .mini-btn:active {
+        transform: translateY(0);
+      }
+
+      .mini-btn::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transform: translateX(-100%);
+        transition: transform 0.4s ease;
+      }
+
+      .mini-btn:hover::after {
+        transform: translateX(100%);
       }
 
       .pill {
@@ -261,8 +289,18 @@
         padding: 12px 18px 20px;
       }
 
-      .gallery h3 {
-        margin: 6px 0 12px;
+      .gallery-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .gallery-header h3 {
+        margin: 0;
         font-size: 20px;
       }
 
@@ -349,6 +387,30 @@
         background: #fff;
         border-radius: 14px;
         padding: 12px;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      .ending-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(180deg, #e5c0ce, #cec2e8);
+        opacity: 0;
+        transition: opacity 0.25s ease;
+      }
+
+      .ending-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(175, 152, 165, 0.12);
+      }
+
+      .ending-card:hover::before {
+        opacity: 0.72;
       }
 
       .ending-card h4 {
@@ -366,6 +428,20 @@
       .ending-card.locked {
         opacity: 0.68;
         background: #faf7fb;
+      }
+
+      .ending-card.locked::before {
+        display: none;
+      }
+
+      .ending-card.unlocked-anim {
+        animation: cardUnlock 0.6s ease forwards;
+      }
+
+      @keyframes cardUnlock {
+        0% { opacity: 0; transform: scale(0.95); }
+        50% { opacity: 1; transform: scale(1.02); }
+        100% { opacity: 1; transform: scale(1); }
       }
 
       .grid {
@@ -784,7 +860,10 @@
             <div class="grid" id="home"></div>
           </div>
           <section class="gallery" id="galleryView">
-            <h3>结局图鉴</h3>
+            <div class="gallery-header">
+              <h3>结局图鉴</h3>
+              <button class="plain-btn" id="closeGalleryBtn">返回主页面</button>
+            </div>
             <div class="gallery-stats" id="galleryStats"></div>
             <div class="gallery-progress">
               <div class="progress-ring" id="progressRing">
@@ -1479,10 +1558,10 @@
         }
 
         galleryGrid.innerHTML = allEndings
-          .map((item) => {
+          .map((item, index) => {
             const unlocked = worldState.unlockedEndings.has(item.id);
             return `
-              <article class="ending-card ${unlocked ? "" : "locked"}">
+              <article class="ending-card ${unlocked ? "unlocked-anim" : "locked"}" style="animation-delay: ${index * 0.05}s">
                 <h4>${unlocked ? item.title : "未解锁结局"}</h4>
                 <p>${unlocked ? item.text : `来自：${item.sceneName}`}</p>
               </article>
@@ -1728,6 +1807,11 @@
         galleryView.style.display = "block";
         renderGallery();
         renderSceneFilterOptions();
+      });
+
+      document.getElementById("closeGalleryBtn").addEventListener("click", () => {
+        galleryView.style.display = "none";
+        selectView.style.display = "block";
       });
 
       document.getElementById("resetProgressBtn").addEventListener("click", () => {
