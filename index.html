@@ -61,6 +61,15 @@
         width: 100%;
       }
 
+      #selectScreen {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 16px;
+      }
+
+      .hidden { display: none; }
+
       .welcome {
         display: grid;
         place-items: center;
@@ -118,15 +127,688 @@
         box-shadow: 0 16px 30px rgba(174, 150, 168, 0.32);
       }
 
+      .page {
+        width: min(1080px, 100%);
+        margin: 0 auto;
+        border: 1px solid rgba(236, 226, 240, 0.82);
+        border-radius: 28px;
+        background: var(--panel);
+        box-shadow: 0 28px 56px rgba(144, 122, 137, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.76);
+        backdrop-filter: blur(14px) saturate(120%);
+        overflow: visible;
+        position: relative;
+      }
+
+      .page::before,
+      .page::after {
+        content: "";
+        position: absolute;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .page::before {
+        width: 280px;
+        height: 280px;
+        right: -90px;
+        top: -90px;
+        border-radius: 999px;
+        background: radial-gradient(circle at 30% 30%, rgba(233, 203, 218, 0.4), rgba(233, 203, 218, 0));
+      }
+
+      .page::after {
+        width: 240px;
+        height: 240px;
+        left: -80px;
+        bottom: -110px;
+        border-radius: 999px;
+        background: radial-gradient(circle at 70% 30%, rgba(206, 194, 232, 0.38), rgba(206, 194, 232, 0));
+      }
+
+      .top,
+      #selectView,
+      .story,
+      .ending {
+        position: relative;
+        z-index: 1;
+      }
+
+      .top {
+        text-align: center;
+        padding: 24px 22px 18px;
+        border-bottom: 1px solid var(--line);
+        animation: fadeRise 0.7s ease both;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0));
+      }
+
+      .game-title {
+        margin: 0;
+        font-size: clamp(30px, 5vw, 54px);
+        font-weight: 700;
+        letter-spacing: 0.06em;
+      }
+
+      .title-line {
+        width: min(420px, 70%);
+        margin: 10px auto 8px;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(230, 195, 207, 0), rgba(206, 194, 232, 0.9), rgba(230, 195, 207, 0));
+      }
+
+      .quote {
+        margin: 8px auto 0;
+        max-width: 760px;
+        font-size: 13px;
+        color: var(--muted);
+        letter-spacing: 0.08em;
+      }
+
+      .selector-wrap {
+        text-align: center;
+        padding: 18px 20px 14px;
+      }
+
+      .world-hud {
+        width: min(760px, 92%);
+        margin: 0 auto 12px;
+        background: #ffffffb8;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 10px 12px;
+      }
+
+      .hud-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .hud-actions {
+        margin-top: 8px;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .mini-btn {
+        border: 1px solid #e9deee;
+        background: #fff;
+        color: #625a6f;
+        border-radius: 10px;
+        padding: 6px 10px;
+        font-size: 12px;
+        cursor: pointer;
+      }
+
+      .pill {
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        background: #f8f3fb;
+        border: 1px solid #e9deee;
+      }
+
+      .progress {
+        margin-top: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: #f0e8f4;
+        overflow: hidden;
+      }
+
+      .progress-inner {
+        width: 0;
+        height: 100%;
+        background: linear-gradient(90deg, #e4c1ce, #cdc1e7);
+        transition: width 0.3s ease;
+      }
+
+      .toggle {
+        border: none;
+        background: transparent;
+        color: #655d70;
+        cursor: pointer;
+        display: inline-flex;
+        flex-direction: column;
+        gap: 6px;
+        align-items: center;
+      }
+
+      .toggle-arrow {
+        width: 0;
+        height: 0;
+        border-left: 11px solid transparent;
+        border-right: 11px solid transparent;
+        border-top: 15px solid #bcaed6;
+        transition: transform 0.3s ease, filter 0.3s ease;
+      }
+
+      .toggle.open .toggle-arrow {
+        transform: rotate(180deg);
+        filter: brightness(0.9);
+      }
+
+      .toggle small {
+        color: #7f7789;
+        letter-spacing: 0.06em;
+      }
+
+      .cards-zone {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.42s ease, opacity 0.35s ease;
+        opacity: 0;
+        padding: 0 22px;
+      }
+
+      .cards-zone.open {
+        max-height: 900px;
+        opacity: 1;
+        padding-bottom: 28px;
+      }
+
+      .gallery {
+        display: none;
+        padding: 12px 18px 20px;
+      }
+
+      .gallery h3 {
+        margin: 6px 0 12px;
+        font-size: 20px;
+      }
+
+      .gallery-tools {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+
+      .gallery-stats {
+        margin: 0 0 10px;
+        font-size: 13px;
+        color: #6f697b;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .gallery-progress {
+        margin: 0 0 14px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .progress-ring {
+        width: 68px;
+        height: 68px;
+        border-radius: 999px;
+        background: conic-gradient(#d7c6e8 0deg, #f1e8f6 0deg 360deg);
+        display: grid;
+        place-items: center;
+        box-shadow: inset 0 1px 0 #ffffff;
+      }
+
+      .progress-ring::after {
+        content: "";
+        width: 50px;
+        height: 50px;
+        border-radius: 999px;
+        background: #fff;
+        border: 1px solid #efe4f3;
+        position: absolute;
+      }
+
+      .progress-ring-value {
+        position: relative;
+        z-index: 1;
+        font-size: 12px;
+        color: #625a6f;
+        font-weight: 700;
+      }
+
+      .progress-ring-note {
+        font-size: 12px;
+        color: #746e7f;
+      }
+
+      .gallery-tools select,
+      .gallery-tools button {
+        border: 1px solid #e9deee;
+        background: #fff;
+        color: #625a6f;
+        border-radius: 10px;
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+
+      .gallery-tools button.active {
+        background: linear-gradient(90deg, #e4c1ce, #cdc1e7);
+        color: #4a4353;
+        font-weight: 700;
+      }
+
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+      }
+
+      .ending-card {
+        border: 1px solid var(--line);
+        background: #fff;
+        border-radius: 14px;
+        padding: 12px;
+      }
+
+      .ending-card h4 {
+        margin: 0 0 8px;
+        font-size: 15px;
+      }
+
+      .ending-card p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.65;
+        color: #696474;
+      }
+
+      .ending-card.locked {
+        opacity: 0.68;
+        background: #faf7fb;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .card {
+        position: relative;
+        border: 1px solid transparent;
+        border-radius: 22px;
+        background:
+          linear-gradient(#fffcfb, #fffcfb) padding-box,
+          linear-gradient(120deg, rgba(230, 195, 207, 0.72), rgba(206, 194, 232, 0.72)) border-box;
+        padding: 16px 16px 16px 20px;
+        box-shadow: 0 14px 24px rgba(175, 152, 165, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.84);
+        transition: transform 0.24s ease, box-shadow 0.24s ease;
+        opacity: 0;
+        transform: translateY(14px);
+        overflow: hidden;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 6px;
+        background: linear-gradient(180deg, #e5c0ce, #cec2e8);
+        opacity: 0.72;
+      }
+
+      .card::after {
+        content: "";
+        position: absolute;
+        right: -30px;
+        top: -26px;
+        width: 110px;
+        height: 110px;
+        border-radius: 999px;
+        background: radial-gradient(circle at 30% 30%, rgba(247, 224, 232, 0.7), rgba(247, 224, 232, 0));
+      }
+
+      .cards-zone.open .card {
+        animation: cardIn 0.5s ease forwards;
+      }
+
+      .cards-zone.open .card:nth-child(1) { animation-delay: 0.06s; }
+      .cards-zone.open .card:nth-child(2) { animation-delay: 0.16s; }
+      .cards-zone.open .card:nth-child(3) { animation-delay: 0.26s; }
+      .cards-zone.open .card:nth-child(4) { animation-delay: 0.36s; }
+
+      .card:hover { transform: translateY(-5px) scale(1.01); box-shadow: 0 18px 30px rgba(171, 144, 161, 0.26); }
+
+      .scene-icon {
+        position: absolute;
+        right: 14px;
+        top: 12px;
+        font-size: 22px;
+        opacity: 0.22;
+        transform: translateY(4px);
+        transition: opacity 0.24s ease, transform 0.24s ease;
+      }
+
+      .card:hover .scene-icon { opacity: 0.55; transform: translateY(0); }
+
+      .tag {
+        display: inline-block;
+        padding: 5px 11px;
+        border-radius: 999px;
+        font-size: 12px;
+        transition: filter 0.2s ease, transform 0.2s ease;
+      }
+
+      .tag-main { background: #eed1d9; }
+      .tag-side { background: #d7cde9; }
+      .tag-special { background: #efdecc; }
+      .card:hover .tag { filter: saturate(115%); transform: translateY(-1px); }
+
+      .card h3 {
+        margin: 8px 0 8px;
+        font-size: clamp(20px, 2.5vw, 24px);
+        letter-spacing: 0.02em;
+      }
+
+      .card p {
+        margin: 0 0 14px;
+        color: #696474;
+        line-height: 1.75;
+        font-size: 14px;
+        max-width: 92%;
+      }
+      .card.done h3::after {
+        content: " 已解锁";
+        font-size: 13px;
+        color: #8e7fa2;
+      }
+      .card button {
+        width: min(220px, 100%);
+        border: none;
+        border-radius: 14px;
+        padding: 11px 12px;
+        cursor: pointer;
+        background: linear-gradient(90deg, #e4c1ce, #cdc1e7);
+        color: #4a4353;
+        font-weight: 700;
+        transition: transform 0.2s ease, filter 0.2s ease;
+      }
+
+      .card button:hover { filter: brightness(0.95); transform: scale(1.02); }
+
+      .story {
+        display: none;
+        padding: 16px 18px 24px;
+        animation: fadeRise 0.45s ease both;
+      }
+
+      .story-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 8px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .scene-title { margin: 0; font-size: clamp(20px, 3.2vw, 30px); }
+
+      .scene-role {
+        margin: 6px 8px 0;
+        font-size: 13px;
+        color: #756f80;
+        letter-spacing: 0.03em;
+      }
+
+      .scene-path {
+        margin: 4px 8px 0;
+        font-size: 12px;
+        color: #8a8394;
+        letter-spacing: 0.02em;
+      }
+
+      .plain-btn {
+        border: 1px solid var(--line);
+        background: #fff;
+        color: #595262;
+        border-radius: 10px;
+        padding: 8px 12px;
+        cursor: pointer;
+      }
+
+      .narrative {
+        margin: 16px 6px;
+        line-height: 1.9;
+        color: #534d5f;
+        min-height: 104px;
+        white-space: pre-line;
+        padding: 12px 14px;
+        border: 1px dashed #e9deee;
+        border-radius: 12px;
+        background: #fffdfd;
+      }
+
+      .bubble-wrap { display: grid; gap: 10px; margin: 10px 0 16px; }
+      .bubble {
+        padding: 10px 12px;
+        border-radius: 12px;
+        max-width: 92%;
+        border: 1px solid var(--line);
+        background: #fff;
+      }
+
+      .speaker {
+        display: block;
+        font-size: 12px;
+        color: #7c7486;
+        margin-bottom: 4px;
+      }
+
+      .bubble.me { margin-left: auto; background: #fff2f8; }
+      .bubble.npc { background: #f6f3ff; }
+
+      .choices { display: grid; gap: 10px; }
+      .choice {
+        border: 1px solid #eadfeb;
+        border-radius: 12px;
+        padding: 11px 12px;
+        text-align: left;
+        cursor: pointer;
+        color: #50495a;
+      }
+
+      .c-empathy { background: #efd2dc; }
+      .c-logic { background: #d8d2eb; }
+      .c-rebel { background: #efe0cf; }
+
+      .ending {
+        display: none;
+        padding: 20px;
+        min-height: 520px;
+        background: linear-gradient(180deg, #fffefc, #fff4fa 55%, #fff8ef);
+        animation: fadeRise 0.45s ease both;
+      }
+
+      .end-art {
+        width: 100%;
+        height: 220px;
+        border-radius: 16px;
+        border: 1px solid var(--line);
+        background:
+          radial-gradient(circle at 30% 30%, #efd0db 0%, transparent 25%),
+          radial-gradient(circle at 68% 30%, #d8cfeb 0%, transparent 25%),
+          linear-gradient(180deg, #fff, #fff4fb 58%, #fff8f0);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .end-art-icon {
+        position: absolute;
+        right: 16px;
+        bottom: 14px;
+        z-index: 2;
+        font-size: 30px;
+        line-height: 1;
+        opacity: 0.42;
+        filter: drop-shadow(0 6px 10px rgba(140, 118, 142, 0.22));
+        user-select: none;
+      }
+
+      .end-art.theme-rain {
+        background:
+          repeating-linear-gradient(
+            102deg,
+            rgba(255, 255, 255, 0) 0,
+            rgba(255, 255, 255, 0) 8px,
+            rgba(223, 233, 255, 0.5) 9px,
+            rgba(223, 233, 255, 0.5) 10px
+          ),
+          radial-gradient(circle at 68% 24%, rgba(213, 225, 255, 0.7) 0%, rgba(213, 225, 255, 0) 34%),
+          linear-gradient(180deg, #f8fbff, #eef4ff 62%, #f7f2ff);
+      }
+
+      .end-art.theme-letter {
+        background:
+          linear-gradient(transparent 23px, rgba(236, 220, 206, 0.32) 24px),
+          linear-gradient(90deg, rgba(236, 205, 215, 0.45), rgba(255, 246, 233, 0.66)),
+          #fffaf3;
+        background-size: 100% 24px, 100% 100%, auto;
+      }
+
+      .end-art.theme-night {
+        background:
+          radial-gradient(circle at 22% 26%, rgba(255, 237, 188, 0.45) 0%, rgba(255, 237, 188, 0) 25%),
+          radial-gradient(circle at 78% 30%, rgba(206, 194, 232, 0.5) 0%, rgba(206, 194, 232, 0) 32%),
+          linear-gradient(180deg, #f2effd, #ece7fb 60%, #f6f1ff);
+      }
+
+      .end-art.theme-dawn {
+        background:
+          radial-gradient(circle at 50% 38%, rgba(255, 221, 178, 0.66) 0%, rgba(255, 221, 178, 0) 32%),
+          linear-gradient(180deg, #fff7ee, #ffeede 50%, #fff6f0);
+      }
+
+      .end-art.theme-true {
+        background:
+          radial-gradient(circle at 25% 34%, rgba(216, 195, 255, 0.52) 0%, rgba(216, 195, 255, 0) 30%),
+          radial-gradient(circle at 78% 28%, rgba(255, 213, 230, 0.56) 0%, rgba(255, 213, 230, 0) 34%),
+          linear-gradient(180deg, #fffafd, #f8efff 55%, #fff6f8);
+      }
+
+      .end-art.theme-rain-heal {
+        background:
+          radial-gradient(circle at 50% 40%, rgba(196, 221, 255, 0.6) 0%, rgba(196, 221, 255, 0) 30%),
+          repeating-linear-gradient(100deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0) 8px, rgba(215, 232, 255, 0.52) 9px, rgba(215, 232, 255, 0.52) 10px),
+          linear-gradient(180deg, #f7fbff, #edf4ff 62%, #fef7ff);
+      }
+
+      .end-art.theme-rain-deep {
+        background:
+          radial-gradient(circle at 75% 25%, rgba(173, 198, 236, 0.55) 0%, rgba(173, 198, 236, 0) 28%),
+          repeating-linear-gradient(102deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0) 6px, rgba(194, 213, 243, 0.62) 7px, rgba(194, 213, 243, 0.62) 8px),
+          linear-gradient(180deg, #eef4ff, #e6edfb 62%, #f4ecff);
+      }
+
+      .end-art.theme-letter-warm {
+        background:
+          linear-gradient(transparent 24px, rgba(236, 220, 206, 0.3) 24px),
+          radial-gradient(circle at 80% 24%, rgba(255, 221, 190, 0.48) 0%, rgba(255, 221, 190, 0) 34%),
+          linear-gradient(90deg, #fff7ef, #fffaf6);
+        background-size: 100% 24px, 100% 100%, auto;
+      }
+
+      .end-art.theme-letter-cool {
+        background:
+          linear-gradient(transparent 24px, rgba(215, 214, 238, 0.26) 24px),
+          radial-gradient(circle at 20% 30%, rgba(211, 202, 240, 0.5) 0%, rgba(211, 202, 240, 0) 32%),
+          linear-gradient(90deg, #f9f6ff, #fdfbff);
+        background-size: 100% 24px, 100% 100%, auto;
+      }
+
+      .end-art.theme-city-light {
+        background:
+          radial-gradient(circle at 22% 26%, rgba(255, 234, 176, 0.55) 0%, rgba(255, 234, 176, 0) 26%),
+          radial-gradient(circle at 82% 30%, rgba(206, 194, 232, 0.52) 0%, rgba(206, 194, 232, 0) 34%),
+          linear-gradient(180deg, #f2effd, #ebe7f8 58%, #f7f3ff);
+      }
+
+      .end-art.theme-city-glow {
+        background:
+          radial-gradient(circle at 30% 24%, rgba(255, 219, 195, 0.58) 0%, rgba(255, 219, 195, 0) 26%),
+          radial-gradient(circle at 70% 36%, rgba(246, 196, 225, 0.42) 0%, rgba(246, 196, 225, 0) 36%),
+          linear-gradient(180deg, #fff5f0, #fdf0fb 58%, #fff8f2);
+      }
+
+      .end-art.theme-dawn-gold {
+        background:
+          radial-gradient(circle at 50% 35%, rgba(255, 211, 148, 0.7) 0%, rgba(255, 211, 148, 0) 34%),
+          linear-gradient(180deg, #fff8ef, #ffefd8 52%, #fff6ea);
+      }
+
+      .end-art.theme-dawn-rose {
+        background:
+          radial-gradient(circle at 50% 40%, rgba(255, 199, 208, 0.65) 0%, rgba(255, 199, 208, 0) 34%),
+          linear-gradient(180deg, #fff7f9, #ffeef3 55%, #fff8f1);
+      }
+
+      .end-art.theme-archive {
+        background:
+          linear-gradient(transparent 22px, rgba(226, 217, 204, 0.22) 22px),
+          radial-gradient(circle at 18% 24%, rgba(214, 202, 229, 0.48) 0%, rgba(214, 202, 229, 0) 32%),
+          linear-gradient(90deg, #faf7f1, #fffcf8);
+        background-size: 100% 22px, 100% 100%, auto;
+      }
+
+      .end-art::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 58%;
+        transform: translate(-50%, -50%);
+        width: 82px;
+        height: 82px;
+        border-radius: 999px;
+        background: radial-gradient(circle at 35% 35%, #fff, #f0d4e0);
+        box-shadow: 0 0 0 12px #ffffffaa;
+      }
+
+      .end-title { margin: 16px 0 10px; font-size: clamp(26px, 4vw, 42px); }
+      .end-text { color: #5e576a; line-height: 1.95; white-space: pre-line; }
+      .end-actions { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
+
+      .fade-out-up { animation: fadeOutUp 0.5s ease both; }
+      .fade-in-up { animation: fadeRise 0.6s ease both; }
+
       @keyframes rainShift {
         0% { transform: translateY(0); opacity: 0.45; }
         50% { transform: translateY(8px); opacity: 0.62; }
         100% { transform: translateY(0); opacity: 0.45; }
       }
 
+      @keyframes cardIn {
+        from { opacity: 0; transform: translateY(14px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
       @keyframes fadeRise {
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes fadeOutUp {
+        from { opacity: 1; transform: translateY(0); }
+        to { opacity: 0; transform: translateY(-18px); }
+      }
+
+      @media (max-width: 680px) {
+        #selectScreen { padding: 10px; }
+        .page {
+          width: 100%;
+          border-radius: 18px;
+        }
+        .top { padding: 16px; }
+        .story { padding: 12px; }
+        .cards-zone { padding: 0 14px; }
+        .card p { max-width: 100%; }
+        .card button { width: 100%; }
+        .end-art { height: 170px; }
       }
     </style>
   </head>
@@ -139,10 +821,1369 @@
       </div>
     </section>
 
+    <section class="screen hidden" id="selectScreen">
+      <main class="page">
+        <section class="top">
+          <h1 class="game-title">由<span class="title-glow">小柳</span>主宰的世界</h1>
+          <div class="title-line"></div>
+          <p class="quote">小柳的叙事没有唯一路径，你的每一步都在改写这个世界的记忆</p>
+        </section>
+
+        <section id="selectView">
+          <div class="world-hud">
+            <div class="hud-row">
+              <span class="pill" id="pillEmpathy">共情 0</span>
+              <span class="pill" id="pillLogic">理性 0</span>
+              <span class="pill" id="pillRebel">反叛 0</span>
+              <span class="pill" id="pillUnlock">已解锁 0/5</span>
+            </div>
+            <div class="progress"><div class="progress-inner" id="unlockBar"></div></div>
+            <div class="hud-actions">
+              <button class="mini-btn" id="openGalleryBtn">结局总鉴</button>
+              <button class="mini-btn" id="resetProgressBtn">重置进度</button>
+            </div>
+          </div>
+          <div class="selector-wrap">
+            <button class="toggle" id="toggleScenes" aria-expanded="false">
+              <span class="toggle-arrow"></span>
+              <small>点击展开场景</small>
+            </button>
+          </div>
+          <div class="cards-zone" id="cardsZone">
+            <div class="grid" id="home"></div>
+          </div>
+          <section class="gallery" id="galleryView">
+            <h3>结局图鉴</h3>
+            <div class="gallery-stats" id="galleryStats"></div>
+            <div class="gallery-progress">
+              <div class="progress-ring" id="progressRing">
+                <span class="progress-ring-value" id="progressRingValue">0%</span>
+              </div>
+              <span class="progress-ring-note" id="progressRingNote">当前完成度 0/0</span>
+            </div>
+            <div class="gallery-tools">
+              <select id="sceneFilter"></select>
+              <button id="filterAllBtn" class="active">全部</button>
+              <button id="filterUnlockedBtn">仅已解锁</button>
+              <button id="filterLockedBtn">仅未解锁</button>
+              <button id="filterTrueBtn">仅真结局</button>
+            </div>
+            <div class="gallery-grid" id="galleryGrid"></div>
+          </section>
+        </section>
+
+        <section class="story" id="story">
+          <div class="story-top">
+            <div>
+              <h2 class="scene-title" id="sceneName"></h2>
+              <p class="scene-role" id="sceneRole"></p>
+              <p class="scene-path" id="scenePath"></p>
+            </div>
+            <button class="plain-btn" id="backToSelect">返回场景选择</button>
+          </div>
+          <p class="narrative" id="narrative"></p>
+          <div class="bubble-wrap" id="dialogs"></div>
+          <div class="choices" id="choices"></div>
+        </section>
+
+        <section class="ending" id="ending">
+          <div class="end-art"><span class="end-art-icon" id="endArtIcon">✦</span></div>
+          <h2 class="end-title" id="endTitle"></h2>
+          <p class="end-text" id="endText"></p>
+          <div class="end-actions">
+            <button class="plain-btn" id="retry">重新选择</button>
+            <button class="plain-btn" id="homeBtn">返回场景选择</button>
+          </div>
+        </section>
+      </main>
+    </section>
+
     <script>
-      document.getElementById('enterBtn').addEventListener('click', () => {
-        window.location.href = 'game.html';
+      const scenes = [
+        {
+          id: "crossroad",
+          name: "十字路口·撑白伞的女人",
+          role: "我的角色：神秘公交车司机",
+          npcName: "白伞女人",
+          short: "暴雨夜里的纯白伞影，正等你决定她最后的去处。",
+          icon: "☂",
+          nodes: {
+            start: {
+              narrative:
+                "暴雨深夜，路口的红绿灯像失眠的眼睛反复闪烁。她撑着纯白雨伞，衣角不沾一滴雨，沉默地上车，只说：带我去我没敢去的地方。",
+              dialogs: [
+                { role: "npc", text: "司机先生，今晚的雨，好像在替我说话。" },
+                { role: "me", text: "我会听你说完，再决定路线。" }
+              ],
+              choices: [
+                { type: "empathy", text: "温柔询问她想去哪里", next: "listen" },
+                { type: "logic", text: "直接点破她已经离世", next: "truth" },
+                { type: "rebel", text: "假装不知情，先开离路口", next: "detour" }
+              ]
+            },
+            listen: {
+              narrative: "她说当年赌气离家，没来得及回头。你们驶过旧桥，她忽然问：如果还能见到家人，我该道歉还是沉默离开？",
+              dialogs: [
+                { role: "npc", text: "我怕他们原谅我，也怕他们不原谅我。" }
+              ],
+              choices: [
+                { type: "empathy", text: "陪她回到老屋门口", next: "listen_home" },
+                { type: "logic", text: "替她写下一封信", next: "listen_letter" }
+              ]
+            },
+            listen_home: {
+              narrative: "老屋门前的风铃还在，她迟迟不敢下车。窗帘后有人影晃动，她紧张地抓住伞柄：如果他们已经开始新生活，我该出现吗？",
+              dialogs: [{ role: "me", text: "你出现不是打扰，是完成告别。" }],
+              choices: [
+                { type: "empathy", text: "陪她敲门，把抱歉亲口说出", ending: "rain_heal" },
+                { type: "rebel", text: "把伞留在门口，不露面离开", ending: "door_umbrella" }
+              ]
+            },
+            listen_letter: {
+              narrative: "你写下信的第一行，她忽然要求加上一句：‘其实我一直想回家。’信写完后，她问你要不要署名。",
+              dialogs: [{ role: "npc", text: "如果他们知道是我，会不会更难过。" }],
+              choices: [
+                { type: "logic", text: "署名，让真相完整抵达", ending: "paper_farewell" },
+                { type: "empathy", text: "不署名，让爱先抵达", ending: "nameless_warmth" }
+              ]
+            },
+            truth: {
+              narrative: "真相让车厢短暂沉默。她抬头看后视镜：既然已经结束，我是否该彻底告别，还是留下来守望这个路口？",
+              dialogs: [{ role: "me", text: "选择哪一种，都会是你亲手写下的终章。" }],
+              choices: [
+                { type: "logic", text: "引导她接受终点", next: "truth_end" },
+                { type: "rebel", text: "允许她留在路口", next: "truth_guard" }
+              ]
+            },
+            truth_end: {
+              narrative: "你把车停在旧桥尽头，雨势渐小。她最后问你：死亡之后，记忆会不会也一起消失？",
+              dialogs: [{ role: "me", text: "被真诚触碰过的记忆，会留在别人心里。" }],
+              choices: [
+                { type: "logic", text: "告诉她真相不会消失，只会换一种存在", next: "truth_end_exist" },
+                { type: "empathy", text: "让她把最后一句话托付给你", next: "truth_end_words" }
+              ]
+            },
+            truth_end_exist: {
+              narrative: "她望着桥下水面，像在确认自己是否真的被世界记得。她问：那我该安静离开，还是在离开前再看一眼这个路口？",
+              dialogs: [{ role: "npc", text: "我想带着平静离开，不想再带着恐惧。" }],
+              choices: [
+                { type: "logic", text: "直接离开，把平静留在终点", ending: "clear_end" },
+                { type: "empathy", text: "再回路口看一眼，然后道别", ending: "final_message" }
+              ]
+            },
+            truth_end_words: {
+              narrative: "她把那句话反复练习，仍怕说出口后会更痛。你问她：要不要只留一句给家人，还是留两句给自己？",
+              dialogs: [{ role: "me", text: "有些话不是为了被原谅，是为了让心终于落地。" }],
+              choices: [
+                { type: "empathy", text: "留给家人：对不起，我一直想回家", ending: "final_message" },
+                { type: "logic", text: "留给自己：谢谢你终于敢回头", ending: "clear_end" }
+              ]
+            },
+            truth_guard: {
+              narrative: "她愿意守在路口，但担心自己会被执念吞没。你可以给她一条规则，让她只在需要时出现。",
+              dialogs: [{ role: "npc", text: "我不想再变成让人害怕的影子。" }],
+              choices: [
+                { type: "rebel", text: "约定只为迷路者亮伞", ending: "guardian_ghost" },
+                { type: "logic", text: "约定天亮前必须离开路口", ending: "dawn_guard" }
+              ]
+            },
+            detour: {
+              narrative: "你把车开进灯还亮着的小街，她第一次笑了。她请求你：让她在城市里再看一次凌晨四点，或替她去看一场日出。",
+              dialogs: [{ role: "npc", text: "如果你愿意改写规则，我也想改写自己。" }],
+              choices: [
+                { type: "rebel", text: "带她巡游全城", next: "detour_city" },
+                { type: "empathy", text: "带她去看日出", next: "detour_dawn" }
+              ]
+            },
+            detour_city: {
+              narrative: "你们经过剧院、江边、书店，她看见每个角落都在发生新的故事。她问：我要留下当旁观者，还是偶尔推别人一把？",
+              dialogs: [{ role: "me", text: "旁观会安全，参与会温暖。" }],
+              choices: [
+                { type: "rebel", text: "留下来，做夜色里的流动彩蛋", ending: "easter_wander" },
+                { type: "empathy", text: "帮助迷惘乘客找到回家路", ending: "night_helper" }
+              ]
+            },
+            detour_dawn: {
+              narrative: "晨光爬上高楼，她的轮廓变得透明。她最后犹豫：要在第一束光里离开，还是把白伞交给你继续守望？",
+              dialogs: [{ role: "npc", text: "你会替我记住今晚吗？" }],
+              choices: [
+                { type: "empathy", text: "在晨光中告别", ending: "dawn_release" },
+                { type: "logic", text: "收下白伞，替她守望", ending: "umbrella_legacy" }
+              ]
+            }
+          },
+          endings: {
+            rain_heal: {
+              title: "雨夜释怀",
+              text: "你陪她在门前停了很久。屋里灯亮起时，她终于说出那句迟到的抱歉。\n执念在雨线里慢慢融化，十字路口的风，第一次变得温热。"
+            },
+            paper_farewell: {
+              title: "纸页告别",
+              text: "你替她写下未说完的话，信纸被雨点晕开，却更像真实的眼泪。\n当信箱合上，她的伞面轻轻一颤，像终于完成某个约定。"
+            },
+            clear_end: {
+              title: "清醒落幕",
+              text: "她坦然接受死亡，不再逃避。临别前她向你鞠躬：谢谢你让我看见终点并不残酷。\n她走入雨幕，轮廓渐淡，如一行句读完整的诗。"
+            },
+            guardian_ghost: {
+              title: "路口守望者",
+              text: "她没有离开，而是留在十字路口，专门提醒迷路的灵魂别再错过回家的方向。\n从此每个暴雨夜，都有人看见一把不沾雨的白伞。"
+            },
+            easter_wander: {
+              title: "偏航乘客",
+              text: "你们绕开宿命终点，把整座城当作最后一程。\n她成了跨场景彩蛋般的夜行乘客，偶尔在他人的后视镜里悄悄出现。"
+            },
+            dawn_release: {
+              title: "黎明落伞",
+              text: "你带她看完天边第一束光。她把白伞留在座位上，轻声道谢后走向晨雾。\n那把伞此后再没被撑开，却一直干燥温暖。"
+            },
+            door_umbrella: {
+              title: "门前白伞",
+              text: "她没有敲门，只把白伞靠在门边。清晨有人推门，看见伞柄上挂着一枚写着“对不起”的旧钥匙。\n她笑着消散，像终于回了家。"
+            },
+            nameless_warmth: {
+              title: "无名暖信",
+              text: "那封没有署名的信被收进抽屉最深处，却在每个雨夜被反复读起。\n有时爱不需要名字，也能准确抵达。"
+            },
+            final_message: {
+              title: "最后一句",
+              text: "她托你转达：我不是不爱，只是来不及。\n多年后你在路口再遇她的家人，他们对着雨夜轻声说：我们听见了。"
+            },
+            dawn_guard: {
+              title: "天亮守则",
+              text: "她遵守约定，只在最黑的时刻出现。每当黎明将至，她会收伞退场。\n路口因此少了恐惧，多了秩序与温柔。"
+            },
+            night_helper: {
+              title: "夜行引路人",
+              text: "她不再只为自己停留，而是悄悄引导每个迷失的乘客。\n这座城开始流传：雨夜里，总有一把白伞替你照亮回家的方向。"
+            },
+            umbrella_legacy: {
+              title: "伞下余温",
+              text: "她把白伞交给你，像把未完的善意托付出去。\n后来每逢暴雨，你都会把这把伞借给最需要的人。"
+            }
+          }
+        },
+        {
+          id: "riverside",
+          name: "滨江步道·等待回信的女孩",
+          role: "我的角色：青涩内敛的少女",
+          npcName: "回信女孩",
+          short: "一封未寄出的手写信，和一整个青春的留白。",
+          icon: "✉",
+          nodes: {
+            start: {
+              narrative:
+                "细雨落在江面，雾把栏杆和远灯都晕成柔软轮廓。女孩抱着未寄出的信坐进后座，声音很轻：麻烦去以前我们一起吹风的栏杆边。",
+              dialogs: [
+                { role: "npc", text: "我不是不勇敢，只是怕打破那份纯净。" },
+                { role: "me", text: "有些心动，值得被好好安放。" }
+              ],
+              choices: [
+                { type: "empathy", text: "温柔倾听，陪她怀念", next: "memory" },
+                { type: "logic", text: "理性开导，青春本就残缺", next: "accept" },
+                { type: "rebel", text: "悄悄绕路，去往对方楼下", next: "detour" }
+              ]
+            },
+            memory: {
+              narrative: "她说起课间对视、共享耳机、放学同路。信纸边角被她揉皱。她问：这封信该寄给他，还是寄给那年的自己？",
+              dialogs: [{ role: "npc", text: "我想让这份喜欢有个落点。" }],
+              choices: [
+                { type: "empathy", text: "寄给当年的自己", next: "memory_self" },
+                { type: "rebel", text: "寄给他，不再沉默", next: "memory_him" }
+              ]
+            },
+            memory_self: {
+              narrative: "她在信末写下‘谢谢你勇敢喜欢过’。写完后她又停住：这封信要当场烧掉，还是折成纸船放入江里？",
+              dialogs: [{ role: "me", text: "告别的仪式，会决定回忆留在哪。" }],
+              choices: [
+                { type: "empathy", text: "折成纸船，让它顺流远去", ending: "letter_to_self" },
+                { type: "logic", text: "留作手账，提醒自己曾经明亮", ending: "youth_archive" }
+              ]
+            },
+            memory_him: {
+              narrative: "她准备按下寄送，却又担心打扰对方如今的生活。你建议她：立刻寄出，或设定一年后自动寄达。",
+              dialogs: [{ role: "npc", text: "我怕我的勇敢，来得太晚。" }],
+              choices: [
+                { type: "rebel", text: "现在就寄，接受任何回音", ending: "late_confession" },
+                { type: "logic", text: "一年后寄出，给彼此缓冲", ending: "delayed_letter" }
+              ]
+            },
+            accept: {
+              narrative: "你告诉她，留白也是答案。她望着江面许久，忽然问：如果他也在想我，我们还要不要相见？",
+              dialogs: [{ role: "me", text: "答案不在结局，在你想成为什么样的大人。" }],
+              choices: [
+                { type: "logic", text: "不相见，把青春留在最亮的一页", next: "accept_blank" },
+                { type: "empathy", text: "相见一次，好好说再见", next: "accept_meet" }
+              ]
+            },
+            accept_blank: {
+              narrative: "她点头，却仍有不甘：那我们最后一次去栏杆边，还是直接回家把这封信收好？",
+              dialogs: [{ role: "npc", text: "我想给这段喜欢一个安静落点。" }],
+              choices: [
+                { type: "logic", text: "去栏杆边，把信留给江风", ending: "blank_heartbeat" },
+                { type: "empathy", text: "带回家，锁进抽屉最里层", ending: "drawer_moonlight" }
+              ]
+            },
+            accept_meet: {
+              narrative: "你替她约了旧桥下的咖啡店。她紧张地问：见面时先说谢谢，还是先说对不起？",
+              dialogs: [{ role: "me", text: "先说真心，哪句话都不会错。" }],
+              choices: [
+                { type: "empathy", text: "先说谢谢，再说再见", ending: "bridge_goodbye" },
+                { type: "rebel", text: "先问‘要不要重来一次’", ending: "rain_restart" }
+              ]
+            },
+            detour: {
+              narrative: "你把车停在熟悉楼下。窗边少年也正翻着旧相册。女孩手里那封信发颤：我该上楼敲门，还是把信放进信箱？",
+              dialogs: [{ role: "npc", text: "原来他真的也记得。" }],
+              choices: [
+                { type: "rebel", text: "上楼敲门，让雨夜成为答案", next: "detour_knock" },
+                { type: "logic", text: "把信放进信箱，把心意交给时间", next: "detour_mail" }
+              ]
+            },
+            detour_knock: {
+              narrative: "门前她深呼吸三次。你听见楼道脚步靠近。她最后回头：如果他没认出我，我还能笑着离开吗？",
+              dialogs: [{ role: "me", text: "你是来诚实，不是来胜负。" }],
+              choices: [
+                { type: "rebel", text: "敲门，把所有心意交给当下", ending: "mutual_love" },
+                { type: "logic", text: "把信塞门缝后离开", ending: "door_crack_letter" }
+              ]
+            },
+            detour_mail: {
+              narrative: "信投入信箱那刻，楼道灯忽明忽暗。她问：要不要在楼下等十分钟，看他会不会下来？",
+              dialogs: [{ role: "npc", text: "我怕希望落空，也怕错过奇迹。" }],
+              choices: [
+                { type: "logic", text: "不等，把决定权交给时间", next: "detour_mail_leave" },
+                { type: "empathy", text: "等十分钟，给彼此一个机会", next: "detour_mail_wait" }
+              ]
+            },
+            detour_mail_leave: {
+              narrative: "她走到街角还在回头。你建议她把手机静音一晚，或保持响铃，看看命运会不会主动敲门。",
+              dialogs: [{ role: "me", text: "有时离开也是一种等待。" }],
+              choices: [
+                { type: "logic", text: "静音一晚，明早再看消息", ending: "mailbox_miracle" },
+                { type: "rebel", text: "保持响铃，允许今夜打破平静", ending: "ten_minutes" }
+              ]
+            },
+            detour_mail_wait: {
+              narrative: "你们在楼下并肩站着，雨声盖过心跳。第七分钟时楼道门晃了一下，她紧张地问：我要不要往前走两步？",
+              dialogs: [{ role: "npc", text: "我怕靠近后，他却不是为我而来。" }],
+              choices: [
+                { type: "empathy", text: "往前一步，把勇敢交给当下", ending: "ten_minutes" },
+                { type: "logic", text: "留在原地，给彼此缓冲空间", ending: "mailbox_miracle" }
+              ]
+            }
+          },
+          endings: {
+            letter_to_self: {
+              title: "晚风寄信",
+              text: "她把信寄给十七岁的自己。信里写着：谢谢你曾那样认真地喜欢一个人。\n江风吹过栏杆，她终于把青春温柔地放回口袋。"
+            },
+            late_confession: {
+              title: "迟到告白",
+              text: "信被投入邮筒，像把心脏轻轻放下。几天后她收到回信：我也喜欢你很多年。\n有些故事晚到，却仍然赶上了春天。"
+            },
+            blank_heartbeat: {
+              title: "留白心动",
+              text: "她选择不相见，让最美的停在最美的时候。\n这场暗恋没有失败，它变成了她往后所有温柔的底色。"
+            },
+            bridge_goodbye: {
+              title: "桥边再见",
+              text: "他们在旧栏杆边见了一面，终于把谢谢与抱歉都说出口。\n没有复合，没有遗憾，只有两个长大的灵魂互相点头。"
+            },
+            mutual_love: {
+              title: "雨夜相认",
+              text: "门开时，两人都先笑后红眼。没有轰烈告白，只有一句：原来你也在等。\n这一晚，雨声把多年沉默都翻译成了心意。"
+            },
+            mailbox_miracle: {
+              title: "信箱奇迹",
+              text: "她把信放进信箱，转身时看见少年从楼道跑下来，手里正握着她当年的照片。\n他们隔着雨雾对望，像终于读懂同一本旧日记。"
+            },
+            youth_archive: {
+              title: "青春存档",
+              text: "她把信贴进手账，写下日期与天气。\n不是为了回头，而是为了记住自己曾如何明亮地喜欢过一个人。"
+            },
+            delayed_letter: {
+              title: "延迟寄达",
+              text: "信被设定一年后寄出。那一年里，她慢慢长成更稳的人。\n当回信到来时，她终于能平静地说：谢谢你，也谢谢我自己。"
+            },
+            drawer_moonlight: {
+              title: "抽屉月光",
+              text: "她把信锁进抽屉最里层。每逢雨夜，抽屉里都会有一点纸张的香气。\n那是青春留下的月光，不刺眼，却一直在。"
+            },
+            rain_restart: {
+              title: "雨中重启",
+              text: "他们在咖啡店门口对视很久，然后一起笑出来。\n没人保证结局，但他们决定从一句‘好久不见’开始重新认识。"
+            },
+            door_crack_letter: {
+              title: "门缝回音",
+              text: "她把信塞进门缝，转身离开。刚走到路口，楼上窗灯忽然亮起。\n她没有回头，却知道有人正在读懂她的沉默。"
+            },
+            ten_minutes: {
+              title: "十分钟奇遇",
+              text: "第九分钟，少年冲出楼道，手里拿着同款旧信纸。\n他们都笑着红了眼：原来彼此都在等一个刚刚好的勇敢。"
+            }
+          }
+        },
+        {
+          id: "station",
+          name: "旧站台·抱花束的少年",
+          role: "我的角色：末班线夜间代驾员",
+          npcName: "花束少年",
+          short: "末班车已停，他仍在等一班不会来的列车。",
+          icon: "⏰",
+          nodes: {
+            start: {
+              narrative: "废弃站台的时钟停在 23:59，少年抱着快枯萎的花束站在风里。他说，想去她最喜欢的天桥，再看一次城市的灯。",
+              dialogs: [
+                { role: "npc", text: "我怕忘记她，所以一直不敢往前走。" },
+                { role: "me", text: "记得，并不等于停在原地。" }
+              ],
+              choices: [
+                { type: "empathy", text: "陪他去天桥，把花束放在夜风里", next: "bridge" },
+                { type: "logic", text: "劝他给未来写一封信", next: "future" },
+                { type: "rebel", text: "带他回老站台，重开一次广播", next: "broadcast" }
+              ]
+            },
+            bridge: {
+              narrative: "在天桥风口，他捧着花不肯放手。你问他：想把花留给她，还是留给重新出发的自己？",
+              dialogs: [{ role: "npc", text: "如果放下，我会不会像背叛了她。" }],
+              choices: [
+                { type: "empathy", text: "把花留在桥上，向她道谢", next: "bridge_leave" },
+                { type: "logic", text: "把花带回家，明早插在书桌边", next: "bridge_take" }
+              ]
+            },
+            bridge_leave: {
+              narrative: "他把花放下后迟迟不肯转身。风把花瓣吹散，他忽然问你：要不要再读一遍她最喜欢的那首诗，还是就这样安静离开？",
+              dialogs: [{ role: "me", text: "告别不是仪式越多越好，而是终于愿意向前。" }],
+              choices: [
+                { type: "empathy", text: "读完那首诗，再郑重说再见", ending: "flower_wind" },
+                { type: "rebel", text: "不回头，直接走向下一盏路灯", ending: "wind_without_turn" }
+              ]
+            },
+            bridge_take: {
+              narrative: "你们把花带回车上，他盯着后座沉默良久：我该把花分给朋友，还是只留一枝给自己？",
+              dialogs: [{ role: "npc", text: "我想活下去，也想继续记得她。" }],
+              choices: [
+                { type: "logic", text: "分给朋友，让想念变成连结", ending: "shared_blossom" },
+                { type: "empathy", text: "留一枝在书桌，提醒自己被爱过", ending: "flower_desk" }
+              ]
+            },
+            future: {
+              narrative: "他写下第一行字后停住：我该写给一年后的自己，还是写给还没来得及读信的她？",
+              dialogs: [{ role: "me", text: "有些信，收件人其实都是你自己。" }],
+              choices: [
+                { type: "logic", text: "写给一年后的自己", next: "future_self" },
+                { type: "empathy", text: "写给她，再封存进铁盒", next: "future_her" }
+              ]
+            },
+            future_self: {
+              narrative: "他在信里写下‘请你继续好好生活’。落笔后他问：这封信要设定公开提醒，还是只在低潮时打开？",
+              dialogs: [{ role: "npc", text: "我怕自己坚持不到明年。" }],
+              choices: [
+                { type: "logic", text: "设定每月提醒，慢慢重建秩序", ending: "morning_train" },
+                { type: "rebel", text: "只在最难的时候打开，保留秘密力量", ending: "midnight_envelope" }
+              ]
+            },
+            future_her: {
+              narrative: "铁盒扣上时，他眼眶发红。你问他：要不要把盒子埋在站台边，还是带回家放进衣柜最深处？",
+              dialogs: [{ role: "me", text: "你在选择回忆要住在哪里。" }],
+              choices: [
+                { type: "empathy", text: "埋在站台边，让风替你守护", ending: "sealed_letter" },
+                { type: "logic", text: "带回家，允许自己反复阅读", ending: "wardrobe_echo" }
+              ]
+            },
+            broadcast: {
+              narrative: "你借来旧站广播，给他一分钟。他犹豫：要念她的名字，还是念自己新的出发站名？",
+              dialogs: [{ role: "npc", text: "我想让这座站台记住她，也记住我。" }],
+              choices: [
+                { type: "rebel", text: "念她的名字，让夜车替你告白", next: "broadcast_name" },
+                { type: "logic", text: "念新的站名，宣布重新启程", next: "broadcast_new" }
+              ]
+            },
+            broadcast_name: {
+              narrative: "她的名字在空站里回响三次。他握着话筒问：要不要补一句‘谢谢你来过’，还是只留名字不加解释？",
+              dialogs: [{ role: "npc", text: "我想让她被世界温柔记住。" }],
+              choices: [
+                { type: "empathy", text: "补上那句谢谢你来过", next: "broadcast_name_thanks" },
+                { type: "rebel", text: "只留名字，让风自己解读", next: "broadcast_name_only" }
+              ]
+            },
+            broadcast_name_thanks: {
+              narrative: "他说完谢谢后，整个人明显松了口气。你问他：要不要再补一句‘我会好好活着’，还是把沉默留给结尾？",
+              dialogs: [{ role: "me", text: "结尾如何说，决定你如何开始明天。" }],
+              choices: [
+                { type: "empathy", text: "补上‘我会好好活着’", ending: "night_announcement" },
+                { type: "logic", text: "就此收尾，把行动留给以后", ending: "name_in_wind" }
+              ]
+            },
+            broadcast_name_only: {
+              narrative: "他只念了名字，空站安静得发亮。你建议他最后按一次长音，或直接关麦离开。",
+              dialogs: [{ role: "npc", text: "我想把这段感情留在最干净的一秒。" }],
+              choices: [
+                { type: "rebel", text: "按下长音，让风记住她", ending: "name_in_wind" },
+                { type: "empathy", text: "直接关麦，用沉默表达告别", ending: "night_announcement" }
+              ]
+            },
+            broadcast_new: {
+              narrative: "他念出新站名后，站台安静得只剩雨声。你问：要不要把旧站牌拆下，还是保留它作为纪念？",
+              dialogs: [{ role: "me", text: "纪念不是停留，而是知道自己从哪里来。" }],
+              choices: [
+                { type: "logic", text: "拆下旧站牌，彻底出发", ending: "new_terminal" },
+                { type: "empathy", text: "保留旧站牌，给后来人指路", ending: "old_signpost" }
+              ]
+            }
+          },
+          endings: {
+            flower_wind: { title: "风中花束", text: "他把花放在桥边，向夜风鞠躬。\n想念从疼痛变成祝福，他第一次笑着说：我会好好活下去。" },
+            flower_desk: { title: "桌边晨光", text: "花被带回家，插在书桌旁。每天清晨看见它，他都提醒自己：爱过的人，也希望你向前。" },
+            morning_train: { title: "下一站晨光", text: "写给未来的信装进背包，他买了第二天最早的票。\n旧站台停表重启，像替他按下了继续键。" },
+            sealed_letter: { title: "封存回声", text: "信写给她，也写给过去。铁盒合上那刻，他终于允许自己哭完最后一次。\n从今以后，回忆不再是枷锁。" },
+            night_announcement: { title: "夜班广播", text: "广播里响起她的名字，整座空站像被点亮。\n他说再见时，声音平稳，像终于能独自走回人群。" },
+            new_terminal: { title: "新终点站", text: "他在广播里念出新的站名：明天。\n你们走出站台时，东方刚亮，旧时钟第一次跳到 00:00。" },
+            wind_without_turn: { title: "不回头的风", text: "他没有回头看花束，直直走向站外第一盏路灯。\n那一刻他终于明白，放下不是忘记，而是让记忆继续向前。" },
+            shared_blossom: { title: "共分花期", text: "他把花分给几个老朋友，大家在清晨小店里沉默地举杯。\n想念因此不再孤单，而是变成彼此照看。" },
+            midnight_envelope: { title: "午夜信封", text: "他把信封进抽屉，约定只在最难熬的夜里打开。\n每次拆封，都像被过去的自己轻轻扶住。" },
+            wardrobe_echo: { title: "衣柜回响", text: "铁盒被放进衣柜深处，偶尔被拿出来重读。\n每一次阅读都痛，但每一次都比上一次更平静。" },
+            name_in_wind: { title: "风里名字", text: "广播里只留下她的名字，没有解释也没有结语。\n站台风声很大，却把这段喜欢保存得很完整。" },
+            old_signpost: { title: "旧牌路标", text: "旧站牌被保留下来，挂在候车厅角落。\n后来许多人在它前面停步，而他终于能笑着讲起从前。" }
+          }
+        },
+        {
+          id: "bookstore",
+          name: "巷口书店·失眠的店主",
+          role: "我的角色：深夜街区摆渡人",
+          npcName: "书店店主",
+          short: "她把所有人的故事分类，却找不到自己的章节。",
+          icon: "☷",
+          nodes: {
+            start: {
+              narrative: "深夜书店只留一盏暖灯，店主把退货单摊在柜台上，说自己好像把人生经营成了别人的旁白。",
+              dialogs: [
+                { role: "npc", text: "我每天推荐书，却不知道该翻哪一页救自己。" },
+                { role: "me", text: "要不要先从最薄的一本开始。" }
+              ],
+              choices: [
+                { type: "empathy", text: "陪她重排书架，找回喜欢", next: "reorder" },
+                { type: "logic", text: "帮她做经营诊断，重建书店节奏", next: "plan" },
+                { type: "rebel", text: "建议她歇业一天，带书去看海", next: "sea" }
+              ]
+            },
+            reorder: {
+              narrative: "你们按“心情”重排书架，店主眼睛亮了些。她问：要不要开一个只谈感受的夜读会？",
+              dialogs: [{ role: "npc", text: "我想让读者在这里慢下来。" }],
+              choices: [
+                { type: "empathy", text: "开夜读会，让陌生人讲自己的故事", next: "reorder_night" },
+                { type: "logic", text: "先做小型试读，再逐步扩展", next: "reorder_trial" }
+              ]
+            },
+            reorder_night: {
+              narrative: "第一场夜读会报名爆满，却有人在现场情绪失控。店主紧张看向你：是暂停活动先安抚，还是继续但加入匿名倾诉环节？",
+              dialogs: [{ role: "me", text: "温柔不是回避情绪，而是容纳情绪。" }],
+              choices: [
+                { type: "empathy", text: "加入匿名倾诉环节，继续夜读会", ending: "night_reading" },
+                { type: "logic", text: "暂停一晚，完善规则后重启", ending: "quiet_revision" }
+              ]
+            },
+            reorder_trial: {
+              narrative: "试读会小而稳定，店主却担心节奏太慢。她问：要不要马上扩场，还是继续每周只办一次？",
+              dialogs: [{ role: "npc", text: "我想长久，不想昙花一现。" }],
+              choices: [
+                { type: "logic", text: "维持每周一次，稳步生长", ending: "steady_revival" },
+                { type: "rebel", text: "立刻扩场，赌一次热度", ending: "wild_reading" }
+              ]
+            },
+            plan: {
+              narrative: "你列出库存、活动、现金流。她却犹豫：我要的是更赚钱，还是更像我自己的书店？",
+              dialogs: [{ role: "me", text: "你可以先活下来，再活成自己。" }],
+              choices: [
+                { type: "logic", text: "先保经营，再慢慢回归理想", next: "plan_balance" },
+                { type: "rebel", text: "砍掉畅销区，改成主题策展店", next: "plan_curate" }
+              ]
+            },
+            plan_balance: {
+              narrative: "你们算完账后发现必须裁掉两项活动。她很不舍：砍掉签售会，还是砍掉深夜电影放映？",
+              dialogs: [{ role: "npc", text: "每一项都像我的一部分。" }],
+              choices: [
+                { type: "logic", text: "砍掉签售会，保留稳定社群", ending: "balanced_store" },
+                { type: "empathy", text: "保留签售会，缩小电影场次", ending: "tender_budget" }
+              ]
+            },
+            plan_curate: {
+              narrative: "策展店上线后，第一周客流冷清。她问：要不要妥协加回部分畅销书，还是坚持一个月看反馈？",
+              dialogs: [{ role: "me", text: "理想需要耐心，也需要现金流。" }],
+              choices: [
+                { type: "rebel", text: "坚持一个月，先把风格立住", next: "plan_curate_hold" },
+                { type: "logic", text: "加回少量畅销书作为缓冲", next: "plan_curate_mix" }
+              ]
+            },
+            plan_curate_hold: {
+              narrative: "坚持策略后，第二周开始有固定读者回流，但账面仍紧张。她问你：要不要开付费主题夜谈，还是先维持免费社群？",
+              dialogs: [{ role: "npc", text: "我想活下来，也不想失去理想的温度。" }],
+              choices: [
+                { type: "rebel", text: "开付费夜谈，让价值被看见", ending: "curated_bloom" },
+                { type: "empathy", text: "先免费维持社群，再慢慢转化", ending: "hybrid_shelf" }
+              ]
+            },
+            plan_curate_mix: {
+              narrative: "混合书架上线后销量回升，老读者却担心风格被稀释。她问：要不要把畅销区缩进角落，还是放在入口吸引新客？",
+              dialogs: [{ role: "me", text: "位置会改变阅读路径，也会改变店的性格。" }],
+              choices: [
+                { type: "logic", text: "放入口吸引新客，再引导至策展区", ending: "hybrid_shelf" },
+                { type: "rebel", text: "缩进角落，入口只留策展主题", ending: "curated_bloom" }
+              ]
+            },
+            sea: {
+              narrative: "你们在海边读到天亮。回城前她问：我要不要真的休店一周，还是只给自己留每晚一小时？",
+              dialogs: [{ role: "npc", text: "我怕停下来就再也开不了门。" }],
+              choices: [
+                { type: "rebel", text: "休店一周，彻底重启", next: "sea_break" },
+                { type: "empathy", text: "每天留一小时，只读自己喜欢的书", next: "sea_hour" }
+              ]
+            },
+            sea_break: {
+              narrative: "休店公告贴出后，老顾客纷纷留言。她犹豫：要不要公开说明原因，还是安静离开一周？",
+              dialogs: [{ role: "npc", text: "我不想被误解成放弃。" }],
+              choices: [
+                { type: "rebel", text: "公开写下重启计划", ending: "week_break" },
+                { type: "logic", text: "不解释，用回来后的改变回答", ending: "silent_return" }
+              ]
+            },
+            sea_hour: {
+              narrative: "她坚持每天留一小时给自己，却常被工作打断。你建议：把这一小时固定在闭店后，或安排在开店前。",
+              dialogs: [{ role: "me", text: "给自己留时间，也要给时间立规矩。" }],
+              choices: [
+                { type: "empathy", text: "闭店后一小时，慢慢读到夜深", ending: "one_hour_light" },
+                { type: "logic", text: "开店前一小时，清醒开启一天", ending: "morning_lamp" }
+              ]
+            }
+          },
+          endings: {
+            night_reading: { title: "灯下新章", text: "夜读会开张后，越来越多人带着心事而来。\n书店不再只是卖书的地方，而是城市里最温柔的避雨屋檐。" },
+            steady_revival: { title: "慢火回温", text: "你们从小规模试读开始，客流慢慢回升。\n她说，原来理想不必猛冲，也可以被稳稳托住。" },
+            balanced_store: { title: "平衡之页", text: "书店先恢复盈利，再逐步恢复个性书架。\n她终于不再焦虑地熬夜，学会在现实与热爱之间留白。" },
+            curated_bloom: { title: "策展花期", text: "她大胆改成主题策展书店，起初冷清，后来成为城市文艺坐标。\n她笑着说：这次轮到我写目录。" },
+            week_break: { title: "缺席营业日", text: "她关店一周，带着一本旧诗集去远方。\n回来后，门把手上挂着新牌子：今天也欢迎慢慢活。" },
+            one_hour_light: { title: "一小时灯光", text: "她每天留一小时给自己，读书、写字、发呆。\n那盏只为自己亮的灯，最终照亮了整家店。" },
+            quiet_revision: { title: "静夜修订", text: "夜读会暂停一晚后以更温和的规则重启。\n人们在书页与沉默之间学会了更安全地表达自己。" },
+            wild_reading: { title: "野生读会", text: "扩场后的夜读会热烈又混乱，但也吸引了许多新面孔。\n她在喧闹里找到新的节奏：自由与边界并不冲突。" },
+            tender_budget: { title: "温柔预算", text: "她留下最爱的签售会，同时精简其他开销。\n原来经营也可以是有温度的数学题。" },
+            hybrid_shelf: { title: "混合书架", text: "畅销书与策展区并排而立，看似妥协，却意外地带来更多对话。\n这家店终于像她自己：复杂，但诚实。" },
+            silent_return: { title: "沉默归来", text: "她没有解释任何事，只在回店后换了陈列、灯光和作息。\n顾客们很快明白：她不是离开，而是完成了一次自我校准。" },
+            morning_lamp: { title: "晨间台灯", text: "她把属于自己的那一小时放在开店前。\n每天第一盏灯为自己亮起，整日的疲惫都变得可被安放。" }
+          }
+        },
+        {
+          id: "control_room",
+          name: "监控室·盯着黑屏的夜班保安",
+          role: "我的角色：写字楼夜间维护员",
+          npcName: "老张",
+          short: "半数黑屏里疑似有人影在笑，辞职前夜他请求你陪他撑到天亮。",
+          icon: "▣",
+          nodes: {
+            start: {
+              narrative:
+                "老旧写字楼地下一层的安保监控室里，墙皮泛黄剥落。16 块屏幕有一半黑屏，其余布满雪花噪点。老张握着保温杯，眼睛不敢离开最中间那块黑屏：我最近总看见有人在里面笑。今晚是我最后一班。",
+              dialogs: [
+                { role: "npc", text: "你看那块黑屏，刚才是不是动了一下？" },
+                { role: "me", text: "先别慌，我们按顺序排查。" }
+              ],
+              choices: [
+                { type: "logic", text: "先做硬件排查，确认是不是线路故障", next: "hardware_check" },
+                { type: "empathy", text: "先陪他复盘这周异常，稳定情绪再判断", next: "memory_check" },
+                { type: "rebel", text: "直接调取黑屏时段录像，逆着规则查真相", next: "illegal_pull" }
+              ]
+            },
+            hardware_check: {
+              narrative:
+                "你拆开机柜，发现一组视频分配器烧蚀，按理说这会导致随机黑屏。但就在你拧紧接线时，13 号黑屏短暂亮起，闪过一个像人脸的轮廓。",
+              dialogs: [{ role: "npc", text: "你看见了吗？不是我幻觉吧。" }],
+              choices: [
+                { type: "logic", text: "继续修复系统，先恢复全部画面", next: "restore_system" },
+                { type: "rebel", text: "放弃常规修复，优先追踪 13 号信号源", next: "trace_source" }
+              ]
+            },
+            memory_check: {
+              narrative:
+                "老张说，黑影每次出现都在凌晨 03:17 左右，而且总发生在他准备打辞职申请的那天。你翻到值班日志，发现三年前事故记录被人撕掉了一页。",
+              dialogs: [{ role: "me", text: "这可能不是‘闹鬼’，而是有人不想让那页被看到。" }],
+              choices: [
+                { type: "empathy", text: "陪他回忆事故当天细节，拼回缺失记录", next: "rebuild_log" },
+                { type: "logic", text: "去档案室找备份日志，不靠记忆推断", next: "archive_log" }
+              ]
+            },
+            illegal_pull: {
+              narrative:
+                "你绕过权限限制拉取底层缓存，发现一段未编号视频：监控室里曾有两名保安轮班，但其中一人在系统里被整段抹除。黑影似乎每晚都在重复那个人最后一次值班轨迹。",
+              dialogs: [{ role: "npc", text: "原来我不是一个人值过这些夜。" }],
+              choices: [
+                { type: "rebel", text: "公开这段被删录像，让大楼管理层解释", next: "publish_truth" },
+                { type: "empathy", text: "先确认那名保安家属情况，再决定公开方式", next: "family_first" }
+              ]
+            },
+            restore_system: {
+              narrative:
+                "全部屏幕恢复后，黑影不再出现，仿佛一切只是噪点错觉。但 03:17 到来时，所有画面同步延迟 1 秒，13 号屏幕出现一行字：‘别让他像我一样消失。’",
+              dialogs: [{ role: "npc", text: "这行字……像是给我的。" }],
+              choices: [
+                { type: "logic", text: "保存证据并提交正式事故复核", ending: "cold_evidence" },
+                { type: "empathy", text: "陪老张写完整口述，附在复核材料里", ending: "warm_record" }
+              ]
+            },
+            trace_source: {
+              narrative:
+                "你追踪到信号来自废弃电梯井旁的旧摄像头，里面卡着一张工牌，姓名已被水渍糊掉。镜头角度刚好对着三年前坠落事故的盲区。",
+              dialogs: [{ role: "me", text: "黑屏不是‘看见鬼’，是盲区在反复求救。" }],
+              choices: [
+                { type: "rebel", text: "把盲区问题连同录像一并公开", ending: "blindspot_alarm" },
+                { type: "logic", text: "先补齐盲区，再内部追责", ending: "silent_patch" }
+              ]
+            },
+            rebuild_log: {
+              narrative:
+                "老张终于想起，三年前那晚他临时离岗 7 分钟，回来后另一个保安就不见了。那 7 分钟像一根刺扎在他心里三年。",
+              dialogs: [{ role: "npc", text: "我一直以为是我害了他。" }],
+              choices: [
+                { type: "empathy", text: "告诉他责任不该由一个人背，先做完整还原", ending: "forgive_shift" },
+                { type: "logic", text: "按时间线复盘，确认离岗与事故无直接因果", ending: "timeline_release" }
+              ]
+            },
+            archive_log: {
+              narrative:
+                "你在档案室找到备份：事故主因是监控盲区和迟报机制，不是个人失误。删除记录的人正是当年项目负责人。",
+              dialogs: [{ role: "me", text: "真相终于有了纸面证据。" }],
+              choices: [
+                { type: "logic", text: "走法务流程，追责并修复制度", ending: "system_repair" },
+                { type: "rebel", text: "连夜发给媒体，逼迫公开整改", ending: "midnight_whistle" }
+              ]
+            },
+            publish_truth: {
+              narrative:
+                "你们把视频上传后，管理层连夜来电施压。老张手心全是汗：删帖保住工作，还是顶住压力让真相留下？",
+              dialogs: [{ role: "npc", text: "今晚之后我本来就要走，但我不想再有人被黑屏吞掉。" }],
+              choices: [
+                { type: "rebel", text: "不删，保留公开记录", ending: "blackscreen_speaks" },
+                { type: "empathy", text: "先镜像备份，再分渠道稳妥发布", ending: "slow_broadcast" }
+              ]
+            },
+            family_first: {
+              narrative:
+                "你联系到那名保安的妹妹。她说家里等了三年都没等来完整解释，只收到一份冷冰冰的赔偿书。",
+              dialogs: [{ role: "npc", text: "如果当年有人早点说实话就好了。" }],
+              choices: [
+                { type: "empathy", text: "带老张当面道歉并交出证据", ending: "human_closure" },
+                { type: "logic", text: "先确认证据链完整，再启动联合申诉", ending: "joint_claim" }
+              ]
+            }
+          },
+          endings: {
+            cold_evidence: { title: "冷证据", text: "你们把系统异常完整封存，事故复核终于立案。黑屏不再出现，留下的是可被审计的真相。" },
+            warm_record: { title: "温口述", text: "老张把三年夜班写成口述附卷，第一次不再逃避那段夜晚。黑屏消失时，他轻声说了句谢谢。" },
+            blindspot_alarm: { title: "盲区警报", text: "盲区录像被公开后，大楼连夜补装监控。那张糊掉名字的工牌被装进纪念柜，再也没人被当作‘不存在’。" },
+            silent_patch: { title: "静默修补", text: "你先补齐了所有盲区，再把追责报告递交监管。没有喧哗，却让系统从根上变得更安全。" },
+            forgive_shift: { title: "宽宥值班", text: "老张终于明白，背负三年的并非真相。那晚 03:17，黑屏只亮了一秒，像有人在点头离开。" },
+            timeline_release: { title: "时间线解放", text: "复盘结果证明他并非事故直接责任人。老张辞职那天，第一次没回头看监控室。" },
+            system_repair: { title: "制度回正", text: "法务与监管同步介入，删改记录者被追责，迟报机制被废除。黑屏仍在，但再也不会遮住真相。" },
+            midnight_whistle: { title: "午夜哨声", text: "媒体曝光后，整栋楼被迫公开整改。代价很大，却让后来的人不用再在黑屏里求救。" },
+            blackscreen_speaks: { title: "黑屏发声", text: "你们顶住压力保留公开记录。那晚之后，13 号屏再没出现笑影，只留下雪花像落在静夜里的掌声。" },
+            slow_broadcast: { title: "缓速播报", text: "你们分渠道稳步释出证据，既保护了当事人，也保住了真相完整。老张说，这是他最体面的收班。" },
+            human_closure: { title: "人间结案", text: "在家属面前，老张终于把那句迟到三年的对不起说出口。黑屏没有再亮，像故事终于被好好合上。" },
+            joint_claim: { title: "联合申诉", text: "你们与家属共同发起申诉，证据链完整推进。真相不再依赖某个人的勇气，而变成集体的坚持。" }
+          }
+        }
+      ];
+
+      const welcomeScreen = document.getElementById("welcomeScreen");
+      const selectScreen = document.getElementById("selectScreen");
+      const selectView = document.getElementById("selectView");
+      const homeEl = document.getElementById("home");
+      const cardsZone = document.getElementById("cardsZone");
+      const toggleScenes = document.getElementById("toggleScenes");
+
+      const storyEl = document.getElementById("story");
+      const endingEl = document.getElementById("ending");
+      const sceneNameEl = document.getElementById("sceneName");
+      const sceneRoleEl = document.getElementById("sceneRole");
+      const scenePathEl = document.getElementById("scenePath");
+      const narrativeEl = document.getElementById("narrative");
+      const dialogsEl = document.getElementById("dialogs");
+      const choicesEl = document.getElementById("choices");
+      const endTitleEl = document.getElementById("endTitle");
+      const endTextEl = document.getElementById("endText");
+      const endArtEl = document.querySelector(".end-art");
+      const endArtIconEl = document.getElementById("endArtIcon");
+      const galleryView = document.getElementById("galleryView");
+      const galleryGrid = document.getElementById("galleryGrid");
+      const galleryStats = document.getElementById("galleryStats");
+      const progressRing = document.getElementById("progressRing");
+      const progressRingValue = document.getElementById("progressRingValue");
+      const progressRingNote = document.getElementById("progressRingNote");
+      const sceneFilter = document.getElementById("sceneFilter");
+      const filterAllBtn = document.getElementById("filterAllBtn");
+      const filterUnlockedBtn = document.getElementById("filterUnlockedBtn");
+      const filterLockedBtn = document.getElementById("filterLockedBtn");
+      const filterTrueBtn = document.getElementById("filterTrueBtn");
+      const pillEmpathy = document.getElementById("pillEmpathy");
+      const pillLogic = document.getElementById("pillLogic");
+      const pillRebel = document.getElementById("pillRebel");
+      const pillUnlock = document.getElementById("pillUnlock");
+      const unlockBar = document.getElementById("unlockBar");
+
+      let currentSceneId = "";
+      let currentNodeKey = "start";
+      let currentPathChoices = [];
+      let cardsOpen = false;
+      let hasEnteredFromHome = false;
+      const worldState = {
+        empathy: 0,
+        logic: 0,
+        rebel: 0,
+        unlockedScenes: new Set(),
+        unlockedEndings: new Set(),
+        whiteUmbrellaMet: false,
+        trueEndUnlocked: false
+      };
+
+      const galleryState = {
+        sceneId: "all",
+        mode: "all"
+      };
+
+      const STORE_KEY = "xiaoliu-world-save-v1";
+
+      function saveState() {
+        const payload = {
+          empathy: worldState.empathy,
+          logic: worldState.logic,
+          rebel: worldState.rebel,
+          unlockedScenes: Array.from(worldState.unlockedScenes),
+          unlockedEndings: Array.from(worldState.unlockedEndings),
+          whiteUmbrellaMet: worldState.whiteUmbrellaMet,
+          trueEndUnlocked: worldState.trueEndUnlocked
+        };
+        localStorage.setItem(STORE_KEY, JSON.stringify(payload));
+      }
+
+      function loadState() {
+        const raw = localStorage.getItem(STORE_KEY);
+        if (!raw) return;
+        try {
+          const data = JSON.parse(raw);
+          worldState.empathy = Number(data.empathy) || 0;
+          worldState.logic = Number(data.logic) || 0;
+          worldState.rebel = Number(data.rebel) || 0;
+          worldState.unlockedScenes = new Set(Array.isArray(data.unlockedScenes) ? data.unlockedScenes : []);
+          worldState.unlockedEndings = new Set(Array.isArray(data.unlockedEndings) ? data.unlockedEndings : []);
+          worldState.whiteUmbrellaMet = Boolean(data.whiteUmbrellaMet);
+          worldState.trueEndUnlocked = Boolean(data.trueEndUnlocked);
+        } catch (_e) {
+          localStorage.removeItem(STORE_KEY);
+        }
+      }
+
+      function resetProgress() {
+        worldState.empathy = 0;
+        worldState.logic = 0;
+        worldState.rebel = 0;
+        worldState.unlockedScenes = new Set();
+        worldState.unlockedEndings = new Set();
+        worldState.whiteUmbrellaMet = false;
+        worldState.trueEndUnlocked = false;
+        const idx = scenes.findIndex((s) => s.id === hiddenScene.id);
+        if (idx >= 0) scenes.splice(idx, 1);
+        updateHud();
+        renderCards();
+        renderGallery();
+        saveState();
+      }
+
+      const hiddenScene = {
+        id: "memory_hub",
+        name: "记忆中枢·回声天台",
+        role: "我的角色：雾城叙事见证者",
+        npcName: "小柳",
+        short: "当三种力量达成平衡时，隐藏结局会在晨雾里开启。",
+        icon: "✦",
+        nodes: {
+          start: {
+            narrative:
+              "你来到城市最高处的回声天台。四个场景里被你治愈过的人影在薄雾中并肩站立，白伞女人也轻轻点头。小柳的声音从风里落下：你愿意让这个世界继续有分歧，还是替所有人给出一个标准答案？",
+            dialogs: [
+              { role: "npc", text: "你不是来选对错，而是来决定这座城如何继续呼吸。" }
+            ],
+            choices: [
+              { type: "empathy", text: "让每个人保留自己的记忆版本", ending: "true_resonance" },
+              { type: "logic", text: "建立透明规则，允许被持续修订", ending: "true_balance" },
+              { type: "rebel", text: "彻底打碎旧叙事，交给众人重写", ending: "true_rewrite" }
+            ]
+          }
+        },
+        endings: {
+          true_resonance: {
+            title: "真结局·共鸣纪元",
+            text: "你没有抹平分歧，而是让差异并存。\n雾城从此拥有许多版本的真相，也拥有彼此倾听的能力。\n小柳在远处笑着说：这次，世界不是被主宰，而是被温柔地共同书写。"
+          },
+          true_balance: {
+            title: "真结局·透明星图",
+            text: "你建立了可被质疑、可被修订的规则。\n每一次记忆改写都会留下痕迹，所有人都能参与裁决。\n雾城不再害怕错误，因为它学会了一起修正方向。"
+          },
+          true_rewrite: {
+            title: "真结局·破晓重写",
+            text: "你把旧叙事交还给人群，城市短暂混沌，却迸发前所未有的创造力。\n街头、书店、站台、江边同时亮起灯，像万千故事在同一页开花。\n小柳轻声说：欢迎来到没有标准答案的新世界。"
+          }
+        }
+      };
+
+      function classByType(type) {
+        if (type === "empathy") return "c-empathy";
+        if (type === "logic") return "c-logic";
+        return "c-rebel";
+      }
+
+      function updateHud() {
+        pillEmpathy.textContent = `共情 ${worldState.empathy}`;
+        pillLogic.textContent = `理性 ${worldState.logic}`;
+        pillRebel.textContent = `反叛 ${worldState.rebel}`;
+        pillUnlock.textContent = `已解锁 ${worldState.unlockedScenes.size}/5`;
+        unlockBar.style.width = `${(worldState.unlockedScenes.size / 5) * 100}%`;
+      }
+
+      function collectAllEndings() {
+        const all = [];
+        scenes.forEach((scene) => {
+          Object.entries(scene.endings).forEach(([key, val]) => {
+            all.push({
+              id: `${scene.id}:${key}`,
+              sceneId: scene.id,
+              sceneName: scene.name,
+              title: val.title,
+              text: val.text,
+              isTrueEnding: scene.id === hiddenScene.id
+            });
+          });
+        });
+        return all;
+      }
+
+      function renderSceneFilterOptions() {
+        const options = ['<option value="all">全部场景</option>']
+          .concat(
+            scenes.map((s) => `<option value="${s.id}">${s.name}</option>`)
+          )
+          .join("");
+        sceneFilter.innerHTML = options;
+        sceneFilter.value = galleryState.sceneId;
+      }
+
+      function setGalleryMode(mode) {
+        galleryState.mode = mode;
+        [filterAllBtn, filterUnlockedBtn, filterLockedBtn, filterTrueBtn].forEach((btn) => btn.classList.remove("active"));
+        if (mode === "all") filterAllBtn.classList.add("active");
+        if (mode === "unlocked") filterUnlockedBtn.classList.add("active");
+        if (mode === "locked") filterLockedBtn.classList.add("active");
+        if (mode === "true") filterTrueBtn.classList.add("active");
+        renderGallery();
+      }
+
+      function renderGallery() {
+        const fullEndings = collectAllEndings();
+        const total = fullEndings.length;
+        const unlocked = fullEndings.filter((item) => worldState.unlockedEndings.has(item.id)).length;
+        const mainEndings = fullEndings.filter((item) => item.sceneId !== hiddenScene.id);
+        const mainUnlocked = mainEndings.filter((item) => worldState.unlockedEndings.has(item.id)).length;
+        const trueEndings = fullEndings.filter((item) => item.isTrueEnding);
+        const trueUnlocked = trueEndings.filter((item) => worldState.unlockedEndings.has(item.id)).length;
+        const percent = total > 0 ? Math.round((unlocked / total) * 100) : 0;
+        const degree = Math.round((percent / 100) * 360);
+
+        galleryStats.innerHTML = `
+          <span>总收集 ${unlocked}/${total}</span>
+          <span>普通结局 ${mainUnlocked}/${mainEndings.length}</span>
+          <span>真结局 ${trueUnlocked}/${trueEndings.length}</span>
+        `;
+
+        progressRing.style.background = `conic-gradient(#d7c6e8 0deg ${degree}deg, #f1e8f6 ${degree}deg 360deg)`;
+        progressRingValue.textContent = `${percent}%`;
+        progressRingNote.textContent = `当前完成度 ${unlocked}/${total}`;
+
+        let allEndings = fullEndings;
+        if (galleryState.sceneId !== "all") {
+          allEndings = allEndings.filter((item) => item.sceneId === galleryState.sceneId);
+        }
+        if (galleryState.mode === "unlocked") {
+          allEndings = allEndings.filter((item) => worldState.unlockedEndings.has(item.id));
+        }
+        if (galleryState.mode === "locked") {
+          allEndings = allEndings.filter((item) => !worldState.unlockedEndings.has(item.id));
+        }
+        if (galleryState.mode === "true") {
+          allEndings = allEndings.filter((item) => item.isTrueEnding);
+        }
+
+        galleryGrid.innerHTML = allEndings
+          .map((item) => {
+            const unlocked = worldState.unlockedEndings.has(item.id);
+            return `
+              <article class="ending-card ${unlocked ? "" : "locked"}">
+                <h4>${unlocked ? item.title : "未解锁结局"}</h4>
+                <p>${unlocked ? item.text : `来自：${item.sceneName}`}</p>
+              </article>
+            `;
+          })
+          .join("");
+      }
+
+      function tryUnlockTrueEnding() {
+        const balanced =
+          worldState.empathy >= 3 &&
+          worldState.logic >= 3 &&
+          worldState.rebel >= 3 &&
+          Math.abs(worldState.empathy - worldState.logic) <= 2 &&
+          Math.abs(worldState.logic - worldState.rebel) <= 2;
+        const ready = worldState.unlockedScenes.size === 5 && balanced;
+        if (ready && !worldState.trueEndUnlocked) {
+          worldState.trueEndUnlocked = true;
+          scenes.push(hiddenScene);
+          renderCards();
+          renderGallery();
+        }
+      }
+
+      function renderCards() {
+        homeEl.innerHTML = scenes
+          .map(
+            (s) => `
+              <article class="card">
+                <span class="scene-icon" aria-hidden="true">${s.icon || ""}</span>
+                <h3>${s.name}</h3>
+                <p>${s.short}</p>
+                <button data-id="${s.id}">进入剧情线</button>
+              </article>
+            `
+          )
+          .join("");
+
+        homeEl.querySelectorAll(".card").forEach((card, index) => {
+          const sceneId = scenes[index]?.id;
+          if (sceneId && worldState.unlockedScenes.has(sceneId)) {
+            card.classList.add("done");
+          }
+        });
+
+        homeEl.querySelectorAll("button[data-id]").forEach((btn) => {
+          btn.addEventListener("click", () => startScene(btn.dataset.id));
+        });
+      }
+
+      function openCards() {
+        cardsOpen = true;
+        cardsZone.classList.add("open");
+        toggleScenes.classList.add("open");
+        toggleScenes.setAttribute("aria-expanded", "true");
+      }
+
+      function closeCards() {
+        cardsOpen = false;
+        cardsZone.classList.remove("open");
+        toggleScenes.classList.remove("open");
+        toggleScenes.setAttribute("aria-expanded", "false");
+      }
+
+      function toggleCards() {
+        if (cardsOpen) {
+          closeCards();
+        } else {
+          openCards();
+        }
+      }
+
+      function toSelectScreen() {
+        hasEnteredFromHome = true;
+        welcomeScreen.classList.add("fade-out-up");
+        setTimeout(() => {
+          welcomeScreen.classList.add("hidden");
+          selectScreen.classList.remove("hidden");
+          selectScreen.classList.add("fade-in-up");
+          setTimeout(() => {
+            selectScreen.classList.remove("fade-in-up");
+          }, 580);
+        }, 420);
+      }
+
+      let typeTimer = null;
+      function typeWriter(text, speed = 20) {
+        if (typeTimer) clearInterval(typeTimer);
+        narrativeEl.textContent = "";
+        let idx = 0;
+        typeTimer = setInterval(() => {
+          narrativeEl.textContent += text[idx] || "";
+          idx += 1;
+          if (idx >= text.length) clearInterval(typeTimer);
+        }, speed);
+      }
+
+      function showSelectView() {
+        if (!hasEnteredFromHome) return;
+        storyEl.style.display = "none";
+        endingEl.style.display = "none";
+        galleryView.style.display = "none";
+        selectView.style.display = "block";
+      }
+
+      function showGalleryView() {
+        if (!hasEnteredFromHome) return;
+        storyEl.style.display = "none";
+        endingEl.style.display = "none";
+        selectView.style.display = "block";
+        galleryView.style.display = "block";
+        renderSceneFilterOptions();
+        renderGallery();
+      }
+
+      function renderSceneNode(scene, nodeKey) {
+        const node = scene.nodes[nodeKey];
+        if (!node) return;
+        currentNodeKey = nodeKey;
+
+        if (scene.id === "crossroad" && nodeKey !== "start") {
+          worldState.whiteUmbrellaMet = true;
+        }
+
+        sceneNameEl.textContent = scene.name;
+        sceneRoleEl.textContent = scene.role || "我的角色：未知旅人";
+        const pathText = currentPathChoices.length > 0 ? `当前路径：${scene.name} / ${currentPathChoices.join(" / ")}` : `当前路径：${scene.name} / 起点`;
+        scenePathEl.textContent = pathText;
+        typeWriter(node.narrative);
+
+        dialogsEl.innerHTML = "";
+        node.dialogs.forEach((d) => {
+          const bubble = document.createElement("div");
+          bubble.className = `bubble ${d.role}`;
+          const speaker = d.role === "me" ? "你" : (scene.npcName || "角色");
+          bubble.innerHTML = `<span class="speaker">${speaker}</span>${d.text}`;
+          dialogsEl.appendChild(bubble);
+        });
+
+        choicesEl.innerHTML = "";
+        const visibleChoices = node.choices.filter((c) => {
+          if (!c.require) return true;
+          if (c.require === "whiteUmbrellaMet") return worldState.whiteUmbrellaMet;
+          if (c.require === "highEmpathy") return worldState.empathy >= 4;
+          if (c.require === "highLogic") return worldState.logic >= 4;
+          if (c.require === "highRebel") return worldState.rebel >= 4;
+          return true;
+        });
+
+        visibleChoices.forEach((c) => {
+          const btn = document.createElement("button");
+          btn.className = `choice ${classByType(c.type)}`;
+          btn.textContent = c.text;
+          btn.addEventListener("click", () => {
+            if (c.type === "empathy") worldState.empathy += 1;
+            if (c.type === "logic") worldState.logic += 1;
+            if (c.type === "rebel") worldState.rebel += 1;
+            updateHud();
+            if (c.next) {
+              currentPathChoices.push(c.text);
+              renderSceneNode(scene, c.next);
+              return;
+            }
+            if (c.ending) {
+              currentPathChoices.push(c.text);
+              const end = scene.endings[c.ending];
+              if (end) showEnding(end.title, end.text, `${scene.id}:${c.ending}`);
+            }
+          });
+          choicesEl.appendChild(btn);
+        });
+      }
+
+      function startScene(sceneId) {
+        const scene = scenes.find((s) => s.id === sceneId);
+        if (!scene) return;
+        currentSceneId = sceneId;
+        currentNodeKey = "start";
+        currentPathChoices = [];
+
+        const sourceCard = homeEl.querySelector(`button[data-id="${sceneId}"]`)?.closest(".card");
+        if (sourceCard) {
+          sourceCard.style.transform = "scale(0.98)";
+          sourceCard.style.opacity = "0";
+        }
+
+        setTimeout(() => {
+          selectView.style.display = "none";
+          endingEl.style.display = "none";
+          storyEl.style.display = "block";
+          renderSceneNode(scene, "start");
+
+          if (sourceCard) {
+            sourceCard.style.transform = "";
+            sourceCard.style.opacity = "";
+          }
+        }, 260);
+      }
+
+      function showEnding(title, text, endingId) {
+        if (endingId) {
+          worldState.unlockedEndings.add(endingId);
+        }
+        if (currentSceneId && currentSceneId !== hiddenScene.id) {
+          worldState.unlockedScenes.add(currentSceneId);
+        }
+        tryUnlockTrueEnding();
+        updateHud();
+        renderCards();
+        renderGallery();
+        saveState();
+
+        storyEl.style.display = "none";
+        endingEl.style.display = "block";
+        endTitleEl.textContent = title;
+        endTextEl.textContent = text;
+
+        const themes = [
+          "theme-rain",
+          "theme-letter",
+          "theme-night",
+          "theme-dawn",
+          "theme-true",
+          "theme-rain-heal",
+          "theme-rain-deep",
+          "theme-letter-warm",
+          "theme-letter-cool",
+          "theme-city-light",
+          "theme-city-glow",
+          "theme-dawn-gold",
+          "theme-dawn-rose",
+          "theme-archive"
+        ];
+        endArtEl.classList.remove(...themes);
+        const id = endingId || "";
+        const ENDING_THEME_MAP = {
+          "crossroad:rain_heal": "theme-rain-heal",
+          "crossroad:paper_farewell": "theme-letter-cool",
+          "crossroad:clear_end": "theme-rain-deep",
+          "crossroad:guardian_ghost": "theme-night",
+          "crossroad:easter_wander": "theme-city-light",
+          "crossroad:dawn_release": "theme-dawn-gold",
+          "crossroad:door_umbrella": "theme-rain-heal",
+          "crossroad:nameless_warmth": "theme-letter-warm",
+          "crossroad:final_message": "theme-rain-deep",
+          "crossroad:dawn_guard": "theme-night",
+          "crossroad:night_helper": "theme-city-light",
+          "crossroad:umbrella_legacy": "theme-dawn-rose",
+
+          "riverside:letter_to_self": "theme-letter-warm",
+          "riverside:late_confession": "theme-letter-cool",
+          "riverside:blank_heartbeat": "theme-dawn",
+          "riverside:bridge_goodbye": "theme-dawn-rose",
+          "riverside:mutual_love": "theme-city-glow",
+          "riverside:mailbox_miracle": "theme-letter-cool",
+          "riverside:youth_archive": "theme-archive",
+          "riverside:delayed_letter": "theme-letter-cool",
+          "riverside:drawer_moonlight": "theme-night",
+          "riverside:rain_restart": "theme-rain-heal",
+          "riverside:door_crack_letter": "theme-letter-warm",
+          "riverside:ten_minutes": "theme-city-glow",
+
+          "station:flower_wind": "theme-dawn-gold",
+          "station:flower_desk": "theme-dawn-rose",
+          "station:morning_train": "theme-city-light",
+          "station:sealed_letter": "theme-archive",
+          "station:night_announcement": "theme-night",
+          "station:new_terminal": "theme-dawn-gold",
+
+          "bookstore:night_reading": "theme-city-light",
+          "bookstore:steady_revival": "theme-dawn-rose",
+          "bookstore:balanced_store": "theme-archive",
+          "bookstore:curated_bloom": "theme-city-glow",
+          "bookstore:week_break": "theme-dawn-gold",
+          "bookstore:one_hour_light": "theme-letter-warm",
+
+          "memory_hub:true_resonance": "theme-true",
+          "memory_hub:true_balance": "theme-true",
+          "memory_hub:true_rewrite": "theme-true"
+        };
+
+        endArtEl.classList.add(ENDING_THEME_MAP[id] || "theme-dawn");
+
+        const ENDING_ICON_MAP = {
+          "crossroad:rain_heal": "☂",
+          "crossroad:paper_farewell": "✉",
+          "crossroad:clear_end": "⟡",
+          "crossroad:guardian_ghost": "◌",
+          "crossroad:easter_wander": "↺",
+          "crossroad:dawn_release": "☼",
+          "crossroad:door_umbrella": "⌂",
+          "crossroad:nameless_warmth": "✉",
+          "crossroad:final_message": "⋯",
+          "crossroad:dawn_guard": "◔",
+          "crossroad:night_helper": "➹",
+          "crossroad:umbrella_legacy": "☂",
+
+          "riverside:letter_to_self": "✎",
+          "riverside:late_confession": "✉",
+          "riverside:blank_heartbeat": "◦",
+          "riverside:bridge_goodbye": "⟢",
+          "riverside:mutual_love": "♡",
+          "riverside:mailbox_miracle": "✉",
+          "riverside:youth_archive": "☽",
+          "riverside:delayed_letter": "⌛",
+          "riverside:drawer_moonlight": "☾",
+          "riverside:rain_restart": "☔",
+          "riverside:door_crack_letter": "✎",
+          "riverside:ten_minutes": "◷",
+
+          "station:flower_wind": "❀",
+          "station:flower_desk": "✿",
+          "station:morning_train": "⟶",
+          "station:sealed_letter": "⎙",
+          "station:night_announcement": "⌁",
+          "station:new_terminal": "◎",
+
+          "bookstore:night_reading": "📖",
+          "bookstore:steady_revival": "☕",
+          "bookstore:balanced_store": "☷",
+          "bookstore:curated_bloom": "✦",
+          "bookstore:week_break": "⌂",
+          "bookstore:one_hour_light": "◉",
+
+          "memory_hub:true_resonance": "✦",
+          "memory_hub:true_balance": "✧",
+          "memory_hub:true_rewrite": "✶"
+        };
+
+        endArtIconEl.textContent = ENDING_ICON_MAP[id] || "✦";
+      }
+
+      document.getElementById("enterBtn").addEventListener("click", toSelectScreen);
+      toggleScenes.addEventListener("click", toggleCards);
+      document.getElementById("backToSelect").addEventListener("click", showSelectView);
+      document.getElementById("homeBtn").addEventListener("click", showSelectView);
+      document.getElementById("retry").addEventListener("click", () => startScene(currentSceneId));
+      document.getElementById("openGalleryBtn").addEventListener("click", () => {
+        window.location.href = "endings.html";
       });
+      document.getElementById("resetProgressBtn").addEventListener("click", resetProgress);
+      sceneFilter.addEventListener("change", () => {
+        galleryState.sceneId = sceneFilter.value;
+        renderGallery();
+      });
+      filterAllBtn.addEventListener("click", () => setGalleryMode("all"));
+      filterUnlockedBtn.addEventListener("click", () => setGalleryMode("unlocked"));
+      filterLockedBtn.addEventListener("click", () => setGalleryMode("locked"));
+      filterTrueBtn.addEventListener("click", () => setGalleryMode("true"));
+
+      loadState();
+      if (worldState.trueEndUnlocked && !scenes.find((s) => s.id === hiddenScene.id)) {
+        scenes.push(hiddenScene);
+      }
+      welcomeScreen.classList.remove("hidden");
+      selectScreen.classList.add("hidden");
+      updateHud();
+      renderCards();
+      renderSceneFilterOptions();
+      renderGallery();
     </script>
   </body>
 </html>
